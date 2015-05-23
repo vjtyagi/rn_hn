@@ -52,7 +52,15 @@ var FrontPage = React.createClass({
 
 			<TouchableHighlight>
 				<View style={styles.postContainer}>
-					<Text style = {styles.title}>{postData.title}</Text>
+					<View>
+						<Text style = {styles.title}>{postData.title}</Text>
+						<Text style = {styles.host}>{postData.hostName}</Text>
+					</View>
+					<View style={styles.descriptions}>
+						
+							<Text style={styles.info}>{postData.createdAt + " hours ago by " + postData.author}</Text>
+							<Text style={[styles.info, styles.stats]}>{postData.points + " points | " + postData.comments + " comments"}</Text>
+					</View>
 					<View style={styles.separator}></View>
 				</View>
 			</TouchableHighlight>
@@ -88,11 +96,27 @@ var styles = StyleSheet.create({
 		backgroundColor: '#F6F6EF'
 	},
 	postContainer: {
-		marginTop: 5
+		margin: 10
 	},
 	separator: {
 		height: 1,
 		backgroundColor: '#dddddd'
+	},
+	host: {
+		color: '#F07530',
+		fontSize: 14,
+		marginLeft: 10
+	},
+	descriptions: {
+		flexDirection: "row"
+	},
+	info: {
+		fontSize: 12,
+		color: '#AAA',
+		margin:10
+	},
+	stats: {
+		alignItems: 'flex-end'
 	}
 });
 
