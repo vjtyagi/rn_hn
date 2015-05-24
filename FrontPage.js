@@ -1,4 +1,7 @@
 var React = require("react-native");
+var config = require('./config');
+var moment = require('moment');
+var URL = require("url");
 var {
 	View,
 	Text,
@@ -7,7 +10,7 @@ var {
 	TouchableHighlight,
 } = React;
 
-
+var apiUrl = config.API_HOST;
 var FrontPage = React.createClass({
 	getInitialState: function(){
 		var dataSource = new ListView.DataSource({
@@ -42,26 +45,36 @@ var FrontPage = React.createClass({
 			}
 		];
 
-		this.setState({
-			dataSource: this.state.dataSource.cloneWithRows(dummyPosts),
-			loaded: true
+		fetch(apiUrl)
+		.then( response => response.json())
+		.then((items) => {
+			this.setState({
+				dataSource: this.state.dataSource.cloneWithRows(items),
+				loaded: true
+			});
+
 		});
+
+	},
+	getHostName: function(url){
+		return URL.parse(url).hostname;
 	},
 	renderPost: function(postData){
+		var time = moment(postData.time*1000).fromNow();
+		var hostName = this.getHostName(postData.url);
 		return (
-
 			<TouchableHighlight>
 				<View style={styles.postContainer}>
 					<View>
 						<Text style = {styles.title}>{postData.title}</Text>
-						<Text style = {styles.host}>{postData.hostName}</Text>
+						<Text style = {styles.host}>{hostName}</Text>
 					</View>
 					<View style={styles.descriptions}>
 						<View style={styles.info_container}>
-							<Text style={styles.info}>{postData.createdAt + " hours ago by " + postData.author}</Text>
+							<Text style={styles.info}>{time + " hours ago by " + postData.by}</Text>
 						</View>
 						<View style={styles.stats_container}>	
-							<Text style={styles.info}>{postData.points + " points | " + postData.comments + " comments"}</Text>
+							<Text style={styles.info}>{postData.score + " points | " + postData.descendants + " comments"}</Text>
 						</View>
 					</View>
 					<View style={styles.separator}></View>
