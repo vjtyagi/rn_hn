@@ -57,9 +57,12 @@ var FrontPage = React.createClass({
 						<Text style = {styles.host}>{postData.hostName}</Text>
 					</View>
 					<View style={styles.descriptions}>
-						
+						<View style={styles.info_container}>
 							<Text style={styles.info}>{postData.createdAt + " hours ago by " + postData.author}</Text>
-							<Text style={[styles.info, styles.stats]}>{postData.points + " points | " + postData.comments + " comments"}</Text>
+						</View>
+						<View style={styles.stats_container}>	
+							<Text style={styles.info}>{postData.points + " points | " + postData.comments + " comments"}</Text>
+						</View>
 					</View>
 					<View style={styles.separator}></View>
 				</View>
@@ -89,7 +92,8 @@ var styles = StyleSheet.create({
 	title:{
 		fontSize: 15,
 		margin: 10,
-		fontWeight: 'bold'
+		fontWeight: 'bold',
+		textAlign: 'left'
 	},
 	postsList: {
 		flex: 1,
@@ -108,15 +112,13 @@ var styles = StyleSheet.create({
 		marginLeft: 10
 	},
 	descriptions: {
-		flexDirection: "row"
+		flexDirection: "row",
+		justifyContent: 'space-between'
 	},
 	info: {
 		fontSize: 12,
 		color: '#AAA',
 		margin:10
-	},
-	stats: {
-		alignItems: 'flex-end'
 	}
 });
 
