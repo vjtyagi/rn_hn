@@ -26,25 +26,7 @@ var FrontPage = React.createClass({
 	},
 	fetchData: function(){
 		// make an ajax call and setState
-		var dummyPosts = [
-			{
-				title: "NSA in P/poly: The power of Precomputation",
-				hostName: "scottaaronson.com",
-				createdAt: "8",
-				author: "evanb",
-				points: 120,
-				comments: 18
-			},
-			{
-				title: "Self promoters tend to misjudge how annoying they are to others",
-				hostName: "psychologicalscience.org",
-				createdAt: "4",
-				author: "Kristiandupont",
-				points: 63,
-				comments: 33
-			}
-		];
-
+		
 		fetch(apiUrl)
 		.then( response => response.json())
 		.then((items) => {
