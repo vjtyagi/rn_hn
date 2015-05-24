@@ -45,7 +45,9 @@ var FrontPage = React.createClass({
 		var time = moment(postData.time*1000).fromNow();
 		var hostName = this.getHostName(postData.url);
 		return (
-			<TouchableHighlight>
+			<TouchableHighlight
+				underlayColor="#E4E4E4"
+				>
 				<View style={styles.postContainer}>
 					<View>
 						<Text style = {styles.title}>{postData.title}</Text>
