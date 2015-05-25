@@ -2,6 +2,7 @@ var React = require("react-native");
 var config = require('./config');
 var moment = require('moment');
 var URL = require("url");
+var Comments = require("./Comments");
 var {
 	View,
 	Text,
@@ -41,12 +42,20 @@ var FrontPage = React.createClass({
 	getHostName: function(url){
 		return URL.parse(url).hostname;
 	},
+	onPostSelected: function(postData){
+		this.props.navigator.push({
+			title: postData.title,
+			component: Comments,
+			passProps: {post: postData}
+		});
+	},
 	renderPost: function(postData){
 		var time = moment(postData.time*1000).fromNow();
 		var hostName = this.getHostName(postData.url);
 		return (
 			<TouchableHighlight
 				underlayColor="#E4E4E4"
+				onPress={()=> this.onPostSelected(postData)}
 				>
 				<View style={styles.postContainer}>
 					<View>
