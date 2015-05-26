@@ -3,6 +3,7 @@ var config = require('./config');
 var moment = require('moment');
 var URL = require("url");
 var Comments = require("./Comments");
+var util = require('./util');
 var {
 	View,
 	Text,
@@ -51,7 +52,7 @@ var FrontPage = React.createClass({
 	},
 	renderPost: function(postData){
 		var time = moment(postData.time*1000).fromNow();
-		var hostName = this.getHostName(postData.url);
+		var hostName = util.getHostName(postData.url);
 		return (
 			<TouchableHighlight
 				underlayColor="#E4E4E4"

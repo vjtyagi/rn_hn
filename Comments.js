@@ -1,4 +1,5 @@
 var React = require("react-native");
+var util = require("./util");
 var {
 	View,
 	Text,
@@ -9,11 +10,11 @@ var {
 var Comments  = React.createClass({
 	
 	render: function(){
-		console.log('props');
-		console.log(this.props);
+		post = this.props.post;
+		host = util.getHostName(post.url);
 		return (
 			<View style = {styles.container}>
-				<Text style={styles.title}>{this.props.post.title}</Text>
+				<Text style={styles.title}>{post.title}</Text>
 			</View>
 		);
 	}
@@ -21,13 +22,14 @@ var Comments  = React.createClass({
 var styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#F6F6EF"
+		backgroundColor: "#F6F6EF",
+		marginTop: 65
 	},
 	title:{
 		fontSize: 15,
-		color: '#fff',
+		fontWeight: 'bold',	
+		color: '#000',
 		margin: 10,
-		fontWeight: 'bold',
 		textAlign: 'left'
 	}
 });
