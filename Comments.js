@@ -18,6 +18,8 @@ var Comments  = React.createClass({
 	render: function(){
 		post = this.props.post;
 		host = util.getHostName(post.url);
+		console.log("post data");
+		console.log(post);
 		return (
 			<View style = {styles.container}>
 				<Text style={styles.postTitle}>{host}</Text>
@@ -29,6 +31,9 @@ var Comments  = React.createClass({
 				 />
 				 <Text style={styles.info}>Posted by {post.by} | {post.score} points</Text>
 				 <View style={styles.separator} />
+				 <View style={styles.commentsContainer}>
+				 	<Text style={styles.commentsInfo}>{post.descendants} Comments</Text>
+				 </View>
 			</View>
 		);
 	}
@@ -66,6 +71,11 @@ var styles = StyleSheet.create({
 	},
 	info: {
 		fontSize: 12,
+		color: '#AAA',
+		margin:10
+	},
+	commentsInfo: {
+		fontSize: 16,
 		color: '#AAA',
 		margin:10
 	}
