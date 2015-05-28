@@ -3,18 +3,27 @@ var util = require("./util");
 var {
 	View,
 	Text,
-	StyleSheet
+	StyleSheet,
+	TouchableHighlight,
+	LinkingIOS
 }=React;
 
 
 var Comments  = React.createClass({
-	
+
+	_linkPressed: function(url){
+		LinkingIOS.openURL(url)
+	},
 	render: function(){
 		post = this.props.post;
 		host = util.getHostName(post.url);
 		return (
 			<View style = {styles.container}>
-				<Text style={styles.title}>{post.title}</Text>
+				<TouchableHighlight
+				 underlayColor="#F6F6EF"
+				 onPress={()=>this._linkPressed(post.url)}>
+					<Text style={styles.link}>{host}</Text>
+				</TouchableHighlight>
 			</View>
 		);
 	}
@@ -31,6 +40,14 @@ var styles = StyleSheet.create({
 		color: '#000',
 		margin: 10,
 		textAlign: 'left'
+	},
+	link: {
+		color: '#F07530',
+		fontSize: 15,
+		marginTop: 10,
+		marginLeft: 10,
+		fontWeight: 'bold'
+	
 	}
 });
 

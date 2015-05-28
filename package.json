@@ -8,8 +8,6 @@
   "dependencies": {
     "moment": "^2.10.3",
     "react-native": "^0.4.4",
-    "react-native-link": "^3.0.0",
-    "react-native-url-handler": "^0.1.1",
     "url": "^0.10.3"
   }
 }

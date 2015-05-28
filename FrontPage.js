@@ -1,7 +1,6 @@
 var React = require("react-native");
 var config = require('./config');
 var moment = require('moment');
-var URL = require("url");
 var Comments = require("./Comments");
 var util = require('./util');
 var {
