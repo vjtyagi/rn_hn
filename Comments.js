@@ -20,12 +20,15 @@ var Comments  = React.createClass({
 		host = util.getHostName(post.url);
 		return (
 			<View style = {styles.container}>
+				<Text style={styles.postTitle}>{host}</Text>
 				<Link
 				 	underlayColor="#F6F6EF"
 				 	url={post.url}
-				 	linkText={host}
+				 	linkText={'(Source)'}
 				 	linkStyle={styles.link}
 				 />
+				 <Text style={styles.info}>Posted by {post.by} | {post.score} points</Text>
+				 <View style={styles.separator} />
 			</View>
 		);
 	}
@@ -44,12 +47,27 @@ var styles = StyleSheet.create({
 		textAlign: 'left'
 	},
 	link: {
+		color: '#3065F0',
+		fontSize: 15,
+		marginTop: 10,
+		marginLeft: 10	
+	},
+	postTitle: {
 		color: '#F07530',
 		fontSize: 15,
 		marginTop: 10,
 		marginLeft: 10,
 		fontWeight: 'bold'
 	
+	},
+	separator: {
+		height: 1,
+		backgroundColor: '#dddddd'
+	},
+	info: {
+		fontSize: 12,
+		color: '#AAA',
+		margin:10
 	}
 });
 
