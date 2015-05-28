@@ -1,5 +1,6 @@
 var React = require("react-native");
 var util = require("./util");
+var Link = require("./Link");
 var {
 	View,
 	Text,
@@ -19,11 +20,12 @@ var Comments  = React.createClass({
 		host = util.getHostName(post.url);
 		return (
 			<View style = {styles.container}>
-				<TouchableHighlight
-				 underlayColor="#F6F6EF"
-				 onPress={()=>this._linkPressed(post.url)}>
-					<Text style={styles.link}>{host}</Text>
-				</TouchableHighlight>
+				<Link
+				 	underlayColor="#F6F6EF"
+				 	url={post.url}
+				 	linkText={host}
+				 	linkStyle={styles.link}
+				 />
 			</View>
 		);
 	}
