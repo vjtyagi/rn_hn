@@ -3,40 +3,54 @@ var {
 	Text,
 	View,
 	TouchableHighlight,
-	ListView
+	ListView,
+	PixelRatio,
+	StyleSheet,
+	ScrollView,
 }=React;
+var HTMLView = require("react-native-htmlview");
 
 var Comment = React.createClass({
-	getInitialState: function(){
-		var dataSource = new ListView.DataSource({
-			rowHasChanged: (row1, row2) => row1 !== row2
-		});
-		return {
-			dataSource: dataSource,
-			loading: true
-		}
-	},
-	componentDidMount: function(){
-		this.setState({
-			dataSource: this.state.dataSource.cloneWithRows(this.props.comments),
-			loading: false
-		});
-	},
-	renderComment: function(comment){
-		return (
-			<Text>{comment.text}</Text>
-		);
-	},
 	render: function(){
+		var comment = this.props.comment;
 		return (
-			<ListView
-			  style={styles.comments_container}
-			  dataSource={this.state.dataSource}
-			  renderRow={this.renderComment} />
-			
+			<View style={styles.commentBody}>
+				<HTMLView value = {comment.text} style={styles.commentText} />
+				{comment.childItems ? <CommentList comments={comment.childItems} />: null }
+			</View>
 		);
 	}
 });
 
+var CommentList = React.createClass({
+	renderComment: function(comment){
+		return <Comment comment={comment} />
+				
+	},
+	render: function(){
+		return (
+			<ScrollView>
+			  {this.props.comments.map(this.renderComment)}
+			</ScrollView>
+				
+		);
+		
+	}
+});
 
-module.exports = Comment;
+
+var styles = StyleSheet.create({
+	commentBody: {
+		paddingLeft: 10,
+		borderLeftColor: "#BBBBBB",
+		borderLeftWidth: 1/PixelRatio.get()
+	},
+	commentText: {
+		color: "#828282"
+	}
+});
+
+module.exports = {
+	Comment: Comment,
+	CommentList: CommentList
+};

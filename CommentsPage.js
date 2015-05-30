@@ -1,7 +1,8 @@
 var React = require("react-native");
 var util = require("./util");
 var Link = require("./Link");
-var CommentList = require('./CommentList');
+var config = require("./config")
+var {CommentList} = require('./Comment');
 var {
 	View,
 	Text,
@@ -10,9 +11,50 @@ var {
 	LinkingIOS
 }=React;
 
+var apiURL = config.API_HOST + "item/";
 
 var Comments  = React.createClass({
 
+	getInitialState: function(){
+		return {
+			comments: []
+		}
+	},
+	componentDidMount: function(){
+		this.fetchComments(this.props.post)
+	},
+	fetchComments: function(post){
+		var comments = [
+			{
+				id: 1, 
+				text: "This is a comment Adding more text some more text  more text .....",
+				childItems: [
+					{
+						id: 2,
+						text: "This is a child comment, add some text , some more text must become multiline, hell yeah",
+						childItems: [
+							{
+								id: 3,
+								text: "This is a sub child, this is awesome"
+							}
+						]
+					}
+				]
+			}
+		];
+
+		var url = apiURL+post.kids[0];
+		console.log("url");
+		console.log(url)
+		fetch(url)
+		.then( response => response.json())
+		.then((comments) => {
+			this.setState({
+				comments: [comments]
+			});
+
+		});
+	},
 	_linkPressed: function(url){
 		LinkingIOS.openURL(url)
 	},
@@ -35,7 +77,9 @@ var Comments  = React.createClass({
 				 <View style={styles.commentsContainer}>
 				 	<Text style={styles.commentsInfo}>{post.descendants} Comments</Text>
 				 </View>
-				 <CommentList comments = {post.childItems} />
+
+				<CommentList comments = {this.state.comments} /> 
+
 			</View>
 		);
 	}
