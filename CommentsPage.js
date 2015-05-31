@@ -1,14 +1,18 @@
 var React = require("react-native");
 var util = require("./util");
 var Link = require("./Link");
-var config = require("./config")
+var config = require("./config");
+var Q = require('q');
+var _ = require("lodash");
 var {CommentList} = require('./Comment');
 var {
 	View,
 	Text,
 	StyleSheet,
 	TouchableHighlight,
-	LinkingIOS
+	LinkingIOS,
+	ScrollView,
+	ActivityIndicatorIOS
 }=React;
 
 var apiURL = config.API_HOST + "item/";
@@ -17,43 +21,43 @@ var Comments  = React.createClass({
 
 	getInitialState: function(){
 		return {
-			comments: []
+			comments: [],
+			isLoading: true,
+			page: 1
 		}
 	},
 	componentDidMount: function(){
-		this.fetchComments(this.props.post)
+		//this.fetchComments(this.props.post);
+		this.getComments(this.props.post);
 	},
 	fetchComments: function(post){
-		var comments = [
-			{
-				id: 1, 
-				text: "This is a comment Adding more text some more text  more text .....",
-				childItems: [
-					{
-						id: 2,
-						text: "This is a child comment, add some text , some more text must become multiline, hell yeah",
-						childItems: [
-							{
-								id: 3,
-								text: "This is a sub child, this is awesome"
-							}
-						]
-					}
-				]
-			}
-		];
-
 		var url = apiURL+post.kids[0];
-		console.log("url");
-		console.log(url)
 		fetch(url)
 		.then( response => response.json())
 		.then((comments) => {
 			this.setState({
-				comments: [comments]
+				comments: [comments],
+				isLoading: false
 			});
 
 		});
+	},
+	getComments: function(post){
+		var promises = _.map(post.kids, function(commentId){
+			return this.getCommentPromise(commentId);
+		}, this);
+
+		Q.all(promises)
+		 .then((comments) => {
+		 	this.setState({
+				comments: comments,
+				isLoading: false
+			});
+		 }).done();
+	},
+	getCommentPromise: function(commentId){
+		return fetch(apiURL+commentId)
+				.then(response => response.json())
 	},
 	_linkPressed: function(url){
 		LinkingIOS.openURL(url)
@@ -61,8 +65,12 @@ var Comments  = React.createClass({
 	render: function(){
 		post = this.props.post;
 		host = util.getHostName(post.url);
-		console.log("post data");
-		console.log(post);
+		var spinner = this.state.isLoading? 
+			(<ActivityIndicatorIOS
+				hidden='true'
+				size='large' /> ):
+			(<View />);
+
 		return (
 			<View style = {styles.container}>
 				<Text style={styles.postTitle}>{host}</Text>
@@ -73,12 +81,18 @@ var Comments  = React.createClass({
 				 	linkStyle={styles.link}
 				 />
 				 <Text style={styles.info}>Posted by {post.by} | {post.score} points</Text>
-				 <View style={styles.separator} />
+		
 				 <View style={styles.commentsContainer}>
 				 	<Text style={styles.commentsInfo}>{post.descendants} Comments</Text>
 				 </View>
-
-				<CommentList comments = {this.state.comments} /> 
+				 <View style={styles.separator} />
+				 {spinner}
+				<ScrollView
+					removeClippedSubviews={true}
+					style={styles.commentsContainer}
+					contentInset={{top: -50}}>
+					<CommentList comments = {this.state.comments} /> 
+				</ScrollView>
 
 			</View>
 		);
@@ -89,6 +103,11 @@ var styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "#F6F6EF",
 		marginTop: 65
+	},
+	commentsContainer: {
+		backgroundColor: "#F6F6EF",
+		paddingLeft: 10,
+		paddingRight: 15
 	},
 	title:{
 		fontSize: 15,
