@@ -16,6 +16,7 @@ var {
 }=React;
 
 var apiURL = config.API_HOST + "item/";
+var PAGE_SIZE = 10;
 
 var Comments  = React.createClass({
 
@@ -27,30 +28,30 @@ var Comments  = React.createClass({
 		}
 	},
 	componentDidMount: function(){
-		//this.fetchComments(this.props.post);
 		this.getComments(this.props.post);
 	},
-	fetchComments: function(post){
-		var url = apiURL+post.kids[0];
-		fetch(url)
-		.then( response => response.json())
-		.then((comments) => {
-			this.setState({
-				comments: [comments],
-				isLoading: false
-			});
-
-		});
+	componentDidUpdate: function(){
+		console.log("component did update called");
+		console.log("current page " + this.props.page );
+		//poor hack
+		if(this.state.isLoading)
+			this.getComments(this.props.post);
 	},
 	getComments: function(post){
-		var promises = _.map(post.kids, function(commentId){
+		var commentIds = this.getCommentIds(post);
+		console.log("commentIds");
+		console.log(commentIds);
+		console.log(post.kids.length);
+		var promises = _.map(commentIds, function(commentId){
 			return this.getCommentPromise(commentId);
 		}, this);
 
 		Q.all(promises)
 		 .then((comments) => {
+		 	var existingComments = this.state.comments;
+		 	var updatedComments = existingComments.concat(comments);
 		 	this.setState({
-				comments: comments,
+				comments: updatedComments,
 				isLoading: false
 			});
 		 }).done();
@@ -59,8 +60,59 @@ var Comments  = React.createClass({
 		return fetch(apiURL+commentId)
 				.then(response => response.json())
 	},
+	getCommentIds: function(post){
+		var page = this.state.page;
+		console.log("page count " + page);
+		var total = post.kids.length;
+		var offset = (page-1) * PAGE_SIZE;
+		var end = offset + PAGE_SIZE;
+
+		return _.slice(post.kids, offset, end);
+	},
 	_linkPressed: function(url){
 		LinkingIOS.openURL(url)
+	},
+	_onScroll: function(event){
+		var nativeEvent = event.nativeEvent,
+			threshold = 10,
+			scrollProperties = {
+			visibleHeight: nativeEvent.layoutMeasurement.height,
+			contentHeight: nativeEvent.contentSize.height,
+			offsetY: nativeEvent.contentOffset.y
+		};
+		
+		var nearEnd = this._getDistanceFromEnd(scrollProperties) < threshold;
+		
+		if(nearEnd && this._sentEndForContentHeight !== scrollProperties.contentHeight){
+			this._sentEndForContentHeight = scrollProperties.contentHeight;
+			this._endReached(event);
+		}
+	},
+	_hasMore: function(){
+		var currentRenderedCount = this._getRenderedRecordsCount();
+		var resultSetSize = this.props.post.kids.length;
+		return resultSetSize > currentRenderedCount ? true: false;
+	},
+	_getRenderedRecordsCount: function(){
+		var currentPage = this.state.page,
+			currentPageSize = currentPage * PAGE_SIZE,
+			resultSetSize = this.props.post.kids.length;
+
+		return currentPageSize > resultSetSize ? resultSetSize : currentPageSize ;
+	},
+	_endReached: function(event){
+		var nextPage = this.state.page + 1;
+		if( this._hasMore() ){
+
+			this.setState({
+				page: nextPage,
+				isLoading: true
+			});
+
+		}
+	},
+	_getDistanceFromEnd: function(scrollProperties){
+		return scrollProperties.contentHeight - scrollProperties.visibleHeight - scrollProperties.offsetY;
 	},
 	render: function(){
 		post = this.props.post;
@@ -90,7 +142,9 @@ var Comments  = React.createClass({
 				<ScrollView
 					removeClippedSubviews={true}
 					style={styles.commentsContainer}
-					contentInset={{top: -50}}>
+					contentInset={{top: -50}}
+					onScroll={(event)=>{this._onScroll(event)} }
+					scrollEventThrottle={200} >
 					<CommentList comments = {this.state.comments} /> 
 				</ScrollView>
 
