@@ -30,11 +30,8 @@ var Comments  = React.createClass({
 	componentDidMount: function(){
 		this.getComments(this.props.post);
 	},
-	componentDidUpdate: function(){
-		console.log("component did update called");
-		console.log("current page " + this.state.page );
-		//poor hack
-		if(this.state.isLoading)
+	componentDidUpdate: function(prevProps, prevState){
+		if(this.state.page !== prevState.page)
 			this.getComments(this.props.post);
 	},
 	getComments: function(post){
