@@ -32,7 +32,7 @@ var Comments  = React.createClass({
 	},
 	componentDidUpdate: function(){
 		console.log("component did update called");
-		console.log("current page " + this.props.page );
+		console.log("current page " + this.state.page );
 		//poor hack
 		if(this.state.isLoading)
 			this.getComments(this.props.post);
