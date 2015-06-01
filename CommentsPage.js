@@ -15,8 +15,9 @@ var {
 	ActivityIndicatorIOS
 }=React;
 
-var apiURL = config.API_HOST + "item/";
-var PAGE_SIZE = 10;
+var apiURL = config.API_HOST + "item/",
+	PAGE_SIZE = config.PAGE_SIZE,
+	threshold = config.threshold;
 
 var Comments  = React.createClass({
 
@@ -36,9 +37,6 @@ var Comments  = React.createClass({
 	},
 	getComments: function(post){
 		var commentIds = this.getCommentIds(post);
-		console.log("commentIds");
-		console.log(commentIds);
-		console.log(post.kids.length);
 		var promises = _.map(commentIds, function(commentId){
 			return this.getCommentPromise(commentId);
 		}, this);
@@ -58,11 +56,10 @@ var Comments  = React.createClass({
 				.then(response => response.json())
 	},
 	getCommentIds: function(post){
-		var page = this.state.page;
-		console.log("page count " + page);
-		var total = post.kids.length;
-		var offset = (page-1) * PAGE_SIZE;
-		var end = offset + PAGE_SIZE;
+		var page = this.state.page,
+			total = post.kids.length,
+			offset = (page-1) * PAGE_SIZE,
+			end = offset + PAGE_SIZE;
 
 		return _.slice(post.kids, offset, end);
 	},
@@ -71,7 +68,6 @@ var Comments  = React.createClass({
 	},
 	_onScroll: function(event){
 		var nativeEvent = event.nativeEvent,
-			threshold = 10,
 			scrollProperties = {
 			visibleHeight: nativeEvent.layoutMeasurement.height,
 			contentHeight: nativeEvent.contentSize.height,
