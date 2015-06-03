@@ -3,6 +3,7 @@ var config = require('./config');
 var moment = require('moment');
 var Comments = require("./CommentsPage");
 var util = require('./util');
+var FireBase = require('firebase');
 var {
 	View,
 	Text,
@@ -14,6 +15,7 @@ var {
 var apiUrl = config.API_HOST;
 var FrontPage = React.createClass({
 	getInitialState: function(){
+		
 		var dataSource = new ListView.DataSource({
 			rowHasChanged: (row1, row2) => row1 !== row2
 		});
@@ -22,8 +24,19 @@ var FrontPage = React.createClass({
 			loaded: false
 		};
 	},
+	componentWillMount: function(){
+		this.testFirebase();
+	},
 	componentDidMount: function(){
 		this.fetchData();
+		
+	},
+	testFirebase: function(){
+		this.firebaseRef = new FireBase(config.FIREBASE_URL).child("topstories");
+		this.firebaseRef.on("value", function(topstories){
+			console.log("top stores");
+			console.log(topstories.val());
+		});
 	},
 	fetchData: function(){
 		// make an ajax call and setState
