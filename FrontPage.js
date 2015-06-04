@@ -21,7 +21,8 @@ var FrontPage = React.createClass({
 		});
 		return {
 			dataSource: dataSource,
-			loaded: false
+			loaded: false,
+			page: 1
 		};
 	},
 	componentWillMount: function(){
@@ -33,10 +34,11 @@ var FrontPage = React.createClass({
 	},
 	testFirebase: function(){
 		this.firebaseRef = new FireBase(config.FIREBASE_URL).child("topstories");
-		this.firebaseRef.on("value", function(topstories){
+		this.firebaseRef.on("value", this.processData.bind(this));
+	},
+	processData:  function(topstories){
 			console.log("top stores");
 			console.log(topstories.val());
-		});
 	},
 	fetchData: function(){
 		// make an ajax call and setState
