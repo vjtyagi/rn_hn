@@ -4,6 +4,8 @@ var moment = require('moment');
 var Comments = require("./CommentsPage");
 var util = require('./util');
 var FireBase = require('firebase');
+var _ = require("lodash");
+var Q = require('q');
 var {
 	View,
 	Text,
@@ -13,16 +15,18 @@ var {
 } = React;
 
 var apiUrl = config.API_HOST;
+var PAGE_SIZE = config.PAGE_SIZE;
 var FrontPage = React.createClass({
 	getInitialState: function(){
-		
+		this.stories = [];
 		var dataSource = new ListView.DataSource({
 			rowHasChanged: (row1, row2) => row1 !== row2
 		});
 		return {
 			dataSource: dataSource,
 			loaded: false,
-			page: 1
+			page: 1,
+			stories: []
 		};
 	},
 	componentWillMount: function(){
@@ -33,12 +37,51 @@ var FrontPage = React.createClass({
 		
 	},
 	testFirebase: function(){
-		this.firebaseRef = new FireBase(config.FIREBASE_URL).child("topstories");
-		this.firebaseRef.on("value", this.processData.bind(this));
+		fetch(config.TOPSTORIES_URL)
+		.then(response => response.json())
+		.then(topstories => {
+			this.stories = topstories;
+			this.getTopStories();
+		});
+
+	},
+	getTopStories: function(){
+		var storyIds = this.getStoryIds(this.stories);
+		var promises = _.map(storyIds, function(storyId){
+			return this.getStoryPromise(storyId);
+		}, this);
+
+		Q.all(promises)
+		.then((stories) =>{
+			console.log("stories fetched");
+			console.log(stories);
+		}).done();
+		
+	},
+	getStoryPromise: function(storyId){
+		return fetch(config.ITEM_URL+storyId+'.json')
+			   .then(response => response.json())
 	},
 	processData:  function(topstories){
-			console.log("top stores");
-			console.log(topstories.val());
+		this.stories = topstories.val();
+
+	},
+	getStoryIds: function(topstories){
+		var page = this.state.page,
+			offset = (page-1) * PAGE_SIZE,
+			end = offset + PAGE_SIZE;
+
+		return _.slice(topstories, offset, end);
+	},
+	loadStories: function(storyIds){
+
+	},
+	paginateStories: function(topstories){
+		//check the current page
+		// avoid new additions, only pagination matters
+		// use once ? this would ensure all the ids are fetched and we
+		// can paginate stuff accordingly
+		// for newly added data pull to refresh is the best option
 	},
 	fetchData: function(){
 		// make an ajax call and setState
