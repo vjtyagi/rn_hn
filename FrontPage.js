@@ -21,6 +21,7 @@ var PAGE_SIZE = config.PAGE_SIZE;
 var FrontPage = React.createClass({
 	getInitialState: function(){
 		this.stories = [];
+		this._data = [];
 		var dataSource = new ListView.DataSource({
 			rowHasChanged: (row1, row2) => row1 !== row2
 		});
@@ -33,6 +34,17 @@ var FrontPage = React.createClass({
 	},
 	componentDidMount: function(){
 		this.fetchData();
+	},
+	loadMore: function(){
+		this.setState({
+			page: this.state.page + 1,
+			loaded: false
+		});
+	},
+	componentDidUpdate: function(prevProps, prevState){
+		if(this.state.page !== prevState.page)
+			this.getTopStories();
+
 	},
 	fetchData: function(){
 		fetch(config.TOPSTORIES_URL)
@@ -51,9 +63,9 @@ var FrontPage = React.createClass({
 
 		Q.all(promises)
 		.then((stories) =>{
-		
+			this._data = this._data.concat(stories);
 			this.setState({
-	 			dataSource: this.state.dataSource.cloneWithRows(stories),
+	 			dataSource: this.state.dataSource.cloneWithRows(this._data),
 	 			loaded: true
 			});
 
@@ -130,6 +142,7 @@ var FrontPage = React.createClass({
 				  style={styles.postsList}
 				  dataSource={this.state.dataSource}
 				  renderHeader={this.renderIndicator}
+				  onEndReached={this.loadMore}
 				  renderRow={this.renderPost} />
 			 			
 		);
