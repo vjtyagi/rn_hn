@@ -6,12 +6,14 @@ var util = require('./util');
 var FireBase = require('firebase');
 var _ = require("lodash");
 var Q = require('q');
+var RefreshIndicator = require("./RefreshingIndicator");
 var {
 	View,
 	Text,
 	StyleSheet,
 	ListView,
 	TouchableHighlight,
+	ActivityIndicatorIOS
 } = React;
 
 var apiUrl = config.API_HOST;
@@ -29,14 +31,10 @@ var FrontPage = React.createClass({
 			stories: []
 		};
 	},
-	componentWillMount: function(){
-		this.testFirebase();
-	},
 	componentDidMount: function(){
 		this.fetchData();
-		
 	},
-	testFirebase: function(){
+	fetchData: function(){
 		fetch(config.TOPSTORIES_URL)
 		.then(response => response.json())
 		.then(topstories => {
@@ -53,8 +51,12 @@ var FrontPage = React.createClass({
 
 		Q.all(promises)
 		.then((stories) =>{
-			console.log("stories fetched");
-			console.log(stories);
+		
+			this.setState({
+	 			dataSource: this.state.dataSource.cloneWithRows(stories),
+	 			loaded: true
+			});
+
 		}).done();
 		
 	},
@@ -73,30 +75,7 @@ var FrontPage = React.createClass({
 
 		return _.slice(topstories, offset, end);
 	},
-	loadStories: function(storyIds){
-
-	},
-	paginateStories: function(topstories){
-		//check the current page
-		// avoid new additions, only pagination matters
-		// use once ? this would ensure all the ids are fetched and we
-		// can paginate stuff accordingly
-		// for newly added data pull to refresh is the best option
-	},
-	fetchData: function(){
-		// make an ajax call and setState
-		
-		fetch(apiUrl)
-		.then( response => response.json())
-		.then((items) => {
-			this.setState({
-				dataSource: this.state.dataSource.cloneWithRows(items),
-				loaded: true
-			});
-
-		});
-
-	},
+	
 	getHostName: function(url){
 		return URL.parse(url).hostname;
 	},
@@ -107,9 +86,14 @@ var FrontPage = React.createClass({
 			passProps: {post: postData}
 		});
 	},
+	renderIndicator: function(){
+		var refreshIndicator = (this.state.loaded == false)? (<RefreshIndicator />): null;
+		return refreshIndicator;
+	},
 	renderPost: function(postData){
 		var time = moment(postData.time*1000).fromNow();
 		var hostName = util.getHostName(postData.url);
+		
 		return (
 			<TouchableHighlight
 				underlayColor="#E4E4E4"
@@ -135,12 +119,19 @@ var FrontPage = React.createClass({
 		);
 	},
 	render: function(){
+		var spinner = this.state.loaded? 
+			(<ActivityIndicatorIOS
+				hidden='true'
+				size='large' /> ):
+			null ;
+
 		return (
-			<ListView
-			  style={styles.postsList}
-			  dataSource={this.state.dataSource}
-			  renderRow={this.renderPost} />
-			
+				<ListView
+				  style={styles.postsList}
+				  dataSource={this.state.dataSource}
+				  renderHeader={this.renderIndicator}
+				  renderRow={this.renderPost} />
+			 			
 		);
 	}
 });
