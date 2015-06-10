@@ -5,7 +5,7 @@
 'use strict';
 
 var React = require('react-native');
-var FrontPage = require("./FrontPage");
+var FrontPage = require("./components/FrontPage");
 
 var {
   AppRegistry,
