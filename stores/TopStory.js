@@ -14,7 +14,7 @@ var TopStory = assign({}, EventEmitter.prototype, {
 		this.emit(CHANGE_EVENT);
 	},
 	getStories: function(){
-
+		return _topStories;
 	},
 	addEventListener: function(callback){
 		this.on(CHANGE_EVENT, callback)
