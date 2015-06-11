@@ -15,6 +15,7 @@ var {
 	TouchableHighlight,
 	ActivityIndicatorIOS
 } = React;
+var TopStoryStore = require("../stores/TopStory");
 
 var apiUrl = config.API_HOST;
 var PAGE_SIZE = config.PAGE_SIZE;
@@ -31,6 +32,8 @@ var FrontPage = React.createClass({
 			page: 1,
 			stories: []
 		};
+
+		
 	},
 	componentDidMount: function(){
 		this.fetchData();

@@ -7,6 +7,11 @@ const CHANGE_EVENT = "change";
 var _topStories = {},
 	_topStoryIds = [];
 
+
+function updateTopStories(stories){
+	_topStories = _topStories.concat(stories);
+}
+
 //Todo register the store with dispatcher
 var TopStory = assign({}, EventEmitter.prototype, {
 	
@@ -27,7 +32,11 @@ var TopStory = assign({}, EventEmitter.prototype, {
 HNDispatcher.register(function(action){
 
 	switch(action.type){
+		case constants.LOAD_TOP_STORIES:
+			updateTopStories(action.stories);
+			break;
 
+		default:
 	}
 });
 
