@@ -32,9 +32,10 @@ var TopStory = assign({}, EventEmitter.prototype, {
 HNDispatcher.register(function(action){
 
 	switch(action.type){
-		case constants.LOAD_TOP_STORIES:
+		case HNConstants.LOAD_TOP_STORIES:
 			updateTopStories(action.stories);
 			break;
+		
 
 		default:
 	}
