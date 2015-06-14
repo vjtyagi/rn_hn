@@ -7,13 +7,31 @@ var {EventEmitter} = require("events"),
 	StoreUtils = require("../utils/StoreUtils");
 
 const CHANGE_EVENT = "change";
+const PAGE_SIZE = 10;
+
 var _cache = {},
 	_stories = {
-		[StoryTypes.TOP_STORIES]: [],
-		[StoryTypes.NEW_STORIES]: [],
-		[StoryTypes.ASK_HN]: [],
-		[StoryTypes.SHOW_HN]: [],
-		[StoryTypes.HN_JOBS]: []
+		[StoryTypes.TOP_STORIES]: {
+			ids: [],
+			values: [],
+			pagination: {
+				pageCount: null,
+				currentPage: 1,
+				total: 0
+			}
+		},
+		[StoryTypes.NEW_STORIES]: {
+			ids: []
+		},
+		[StoryTypes.ASK_HN]: {
+			ids: []
+		},
+		[StoryTypes.SHOW_HN]: {
+			ids: []
+		},
+		[StoryTypes.HN_JOBS]: {
+			ids: []
+		}
 	};
 
 function updateCache(stories){
@@ -22,16 +40,39 @@ function updateCache(stories){
 	}, this);
 }
 
-function updateStories(stories, type){
-	updateCache(stories)
-	updateStoriesByType(stories, type)
+function updateStories({stories, type}){
+	updateCache(stories);
+	updateStoriesByType(stories, type);
+}
+
+function initialRequest(storyIds, type){
+	updateStoryIds(type);
+}
+
+function updateStoryIds(storyIds, type){
+	_stories.type.ids = _stories.type.ids.concat(storyIds);
 }
 
 function updateStoriesByType(stories, type){
-	_stories[type] = _stories[type].concat( _.pluck(stories, "id") );
+	_stories[type].ids = _stories[type].ids.concat( _.pluck(stories, "id") );
+
+}
+
+
+function loadMoreByType(type){
+	_stories[type].pagination.currentPage += 1
+
+}
+
+function paginateStories(type) {
+	var stories = _stories[type],
+		end = stories.pagination.currentPage *  PAGE_SIZE;
+
+	return _.slice(stories.ids, 0, end);
 }
 
 var Story = StoreUtils.createStore({
+
 		query: function(type){
 			return _stories[type];
 		},
@@ -40,17 +81,26 @@ var Story = StoreUtils.createStore({
 		},
 		get: function(id){
 			return _cache[id];
+		},
+		getStoriesByType: function(type){	
+			return _.map(paginateStories(type), function(storyId){
+				return _cache[storyId];
+			}, this);
 		}
 });
 
 HNDispatcher.register(function(action){
 
 	switch(action.type){
-		case ActionTypes.LOAD_TOP_STORIES:
-			updateTopStories(action.stories);
+		case ActionTypes.LOAD_MORE_SUCCESS:
+			updateStories({stories: action.data.stories, type: action.data.storyType});
+			Story.emitChange();
+			break;
+		case ActionTypes.INITIAL_REQUEST_SUCCESS:
+			initialRequest(action.data.ids, type: action.data.storyType);
+			//trigger an action here to fetch the actual data.
 			break;
 		
-
 		default:
 	}
 });
