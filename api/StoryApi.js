@@ -5,28 +5,35 @@ var Q = require("q"),
 	responseFormat = ".json"
 
 var StoryApi = {
-	fetchStories: function (storyType) {
+
+	/*
+	* @returns a Q<Promise>
+	**/
+	fetchStoryIds: function(storyType){	
+		return this._fetchJSONPromise(StoryTypes[storyType] + "_URL");
+	},
+	fetchStories: function (storyType, ids) {
 		switch(storyType){
 			case StoryTypes.TOP_STORIES: 
-				return this.fetchTopStories()
+				return this.fetchTopStories(ids)
 				break;
 			case StoryTypes.NEW_STORIES:
-				return this.fetchNewStories();
+				return this.fetchNewStories(ids);
 				break;
 			case StoryTypes.ASK_HN:
-				return this.fetchAskHN();
+				return this.fetchAskHN(ids);
 				break;
 			case StoryTypes.SHOW_HN:
-				return this.fetchShowHN();
+				return this.fetchShowHN(ids);
 				break;
-			case StoryTypes.JOBS:
-				return this.fetchJobs();
+			case StoryTypes.HN_JOBS:
+				return this.fetchJobs(ids);
 
 			default:
 		}
 	},
 	fetchNewStories: function(){
-		return this.fetchAll(ids, "getNewStoriesPromise");
+		return this.fetchAll(ids, "getNewStoryPromise");
 	},
 	fetchAskHN: function(){
 		return this.fetchAll(ids, "getAskHNPromise");
@@ -54,7 +61,7 @@ var StoryApi = {
 	getJobsPromise: function(id){
 		return this._fetchJSONPromise( config.ITEM_BASE_URL + id  + responseFormat );
 	},
-	getNewStoriesPromise: function(id){
+	getNewStoryPromise: function(id){
 		return this._fetchJSONPromise( config.ITEM_BASE_URL + id  + responseFormat );
 	},
 	getAskHNPromise: function(id){
