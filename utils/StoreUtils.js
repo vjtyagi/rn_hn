@@ -22,6 +22,9 @@ var StoreUtils = {
 		}, spec);
 
 		return store;
+	},
+	createPaginatedStore: function(){
+		
 	}
 };
 

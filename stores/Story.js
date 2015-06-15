@@ -4,7 +4,8 @@ var {EventEmitter} = require("events"),
 	ActionTypes = require("../constants/ActionTypes"),
 	StoryTypes = require("../constants/StoryTypes"),
 	_ = require("lodash"),
-	StoreUtils = require("../utils/StoreUtils");
+	StoreUtils = require("../utils/StoreUtils"),
+	StoryActionCreator = require("../actions/StoryActionCreators");
 
 const CHANGE_EVENT = "change";
 const PAGE_SIZE = 10;
@@ -16,7 +17,7 @@ var _cache = {},
 			values: [],
 			pagination: {
 				pageCount: null,
-				currentPage: 1,
+				currentPage: 0,
 				total: 0
 			}
 		},
@@ -55,12 +56,7 @@ function updateStoryIds(storyIds, type){
 
 function updateStoriesByType(stories, type){
 	_stories[type].ids = _stories[type].ids.concat( _.pluck(stories, "id") );
-
-}
-
-
-function loadMoreByType(type){
-	_stories[type].pagination.currentPage += 1
+	_stories[type].pagination.currentPage += 1;
 
 }
 
@@ -86,6 +82,11 @@ var Story = StoreUtils.createStore({
 			return _.map(paginateStories(type), function(storyId){
 				return _cache[storyId];
 			}, this);
+		},
+		getIdsToLoad: function(type){
+			return _.reject(paginateStories(type), function(storyId){
+				return !! _cache[storyId];
+			}, this);
 		}
 });
 
@@ -98,6 +99,7 @@ HNDispatcher.register(function(action){
 			break;
 		case ActionTypes.INITIAL_REQUEST_SUCCESS:
 			initialRequest(action.data.ids, type: action.data.storyType);
+			StoryActionCreators.loadMore(action.data.storyType);
 			//trigger an action here to fetch the actual data.
 			break;
 		

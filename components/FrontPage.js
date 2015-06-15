@@ -74,7 +74,7 @@ var FrontPage = React.createClass({
 
 		}).done();
 		
-	},
+	},	
 	getStoryPromise: function(storyId){
 		return fetch(config.ITEM_URL+storyId+'.json')
 			   .then(response => response.json())

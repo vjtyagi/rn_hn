@@ -1,4 +1,8 @@
 var StoryStore = require("../stores/Story"),
+	Q = require("q"),
+	HNDispatcher = require("../dispatcher/HNDispatcher"),
+	StoryApi = require("../api/StoryApi"),
+	ActionTypes = require("../constants/ActionTypes"),
 	StoryTypes = require("../constants/StoryTypes");
 
 var StoryActionCreators = {
@@ -15,6 +19,45 @@ var StoryActionCreators = {
 
 			}
 		}); 		
+	},
+	loadMore: function(props){
+		var ids = StoryStore.getIdsToLoad(props.type);
+
+		if(ids.length){
+
+			StoryApi.fetchStories(props.type, ids)
+			.then((stories) => {
+
+				this.dispatch({
+					type: ActionTypes.LOAD_MORE_SUCCESS,
+					data: {
+						storyType: props.type,
+						stories: stories
+					}
+				});
+			})
+			.catch( (response) => {
+
+				this.dispatch({
+					type:  ActionTypes.LOAD_MORE_FAILURE,
+					message: "could not load stories"	
+				});
+
+			}).done();
+
+		} else {
+			payload = {
+				type : ActionTypes.NO_RECORDS_TO_FETCH,
+				data: {
+					storyType: props.type,
+					stories: []
+				}
+			}
+			this.dispatch(payload);
+		}
+	},
+	dispatch: function(payload){
+		HNDispatcher.dispatch(payload);
 	}
 };
 
