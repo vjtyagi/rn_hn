@@ -22,6 +22,8 @@ var StoryActionCreators = {
 	},
 	loadMore: function(props){
 		var ids = StoryStore.getIdsToLoad(props.type);
+		//dispatch a loading action
+		this.dispatch({type: ActionTypes.LOADING_STORIES, data: {}});
 
 		if(ids.length){
 
