@@ -5,6 +5,7 @@ var {EventEmitter} = require("events"),
 	StoryTypes = require("../constants/StoryTypes"),
 	_ = require("lodash"),
 	StoreUtils = require("../utils/StoreUtils"),
+	AppConstants = require("../constants/AppConstants"),
 	StoryActionCreator = require("../actions/StoryActionCreators");
 
 const CHANGE_EVENT = "change";
@@ -14,6 +15,7 @@ var _cache = {},
 	_stories = {
 		[StoryTypes.TOP_STORIES]: {
 			ids: [],
+			status: AppConstants.status.READY,
 			values: [],
 			pagination: {
 				pageCount: null,
