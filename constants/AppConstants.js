@@ -1,7 +1,8 @@
 var appConstants = {
     status: {
         READY: "READY",
-        LOADING: "LOADING"
+        LOADING: "LOADING",
+        NO_MORE_RECORDS: "NO_MORE_RECORDS"
     }
 }
 

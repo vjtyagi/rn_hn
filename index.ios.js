@@ -5,7 +5,8 @@
 'use strict';
 
 var React = require('react-native');
-var FrontPage = require("./components/FrontPage");
+var FrontPage = require("../components/FrontPage");
+var StoryPage = require("../components/StoryPage")
 
 var {
   AppRegistry,
@@ -40,4 +41,4 @@ var styles = StyleSheet.create({
 
 
 
-AppRegistry.registerComponent('rn_hn', () => HackerNewsApp);
+AppRegistry.registerComponent('rn_hn', () => StoryPage);

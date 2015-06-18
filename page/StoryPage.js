@@ -4,12 +4,17 @@ var React = require("react-native"),
 
 const CHANGE_EVENT = "change";
 
-function initialRequest(props){
+var {
+	View,
+	Text
+} = React;
 
+function initialRequest(props){
+	StoryActionCreators.loadStoryIds(props.type);
 }
 
 function getState(props){
-
+	return StoryStore.getStoriesByType(props.type)
 }
 
 var StoryPage = React.createClass({
@@ -26,7 +31,9 @@ var StoryPage = React.createClass({
 	},
 	render: function(){
 		return (
-			<div>Story Page</div>
+			<View>
+				<Text>Story Page</Text>
+			</View>
 		);
 	},
 	loadMore: function(){

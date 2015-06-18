@@ -7,6 +7,26 @@ var StoryStore = require("../stores/Story"),
 
 var StoryActionCreators = {
 
+	loadStoryIds: function(type){
+		this.dispatch({
+			type: ActionTypes.LOADING_STORY_IDS
+		});
+
+		StoryApi.fetchStoryIds(type)
+		.then((response) => {
+			this.dispatch({
+				type: ActionTypes.LOADED_STORY_IDS_SUCCESS,
+				data: response
+			});
+		})
+		.catch( (response) => {
+			this.dispatch({
+				type: LOADED_STORY_IDS_FAILURE,
+				data: response
+			});
+		});
+	},
+
 	getStoriesByType: function(storyType){
 		// consult the store for the data
 		// if data not found consult the api
@@ -23,7 +43,7 @@ var StoryActionCreators = {
 	loadMore: function(props){
 		var ids = StoryStore.getIdsToLoad(props.type);
 		//dispatch a loading action
-		this.dispatch({type: ActionTypes.LOADING_STORIES, data: {}});
+		this.dispatch({type: ActionTypes.LOADING_MORE_STORIES, data: {}});
 
 		if(ids.length){
 

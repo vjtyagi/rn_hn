@@ -16,7 +16,7 @@ var _cache = {},
 		[StoryTypes.TOP_STORIES]: {
 			ids: [],
 			status: AppConstants.status.READY,
-			values: [],
+			initialized: false
 			pagination: {
 				pageCount: null,
 				currentPage: 0,
@@ -104,6 +104,11 @@ HNDispatcher.register(function(action){
 			StoryActionCreators.loadMore(action.data.storyType);
 			//trigger an action here to fetch the actual data.
 			break;
+
+		case ActionTypes.INITIAL_REQUEST_LOADING:
+			//do something to show loading state
+			break;
+
 		
 		default:
 	}
