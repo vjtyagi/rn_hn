@@ -14,11 +14,15 @@ function initialRequest(props){
 }
 
 function getState(props){
-	return StoryStore.getStoriesByType(props.type)
+	return StoryStore.getStoriesByType(props.type);
 }
 
 var StoryPage = React.createClass({
-
+	getInitialState: function(){
+		return {
+			type: StoryTypes.TOP_STORIES
+		};
+	},
 	componentDidMount: function(){
 		StoryStore.addEventListener(CHANGE_EVENT, this.onStoryChange);
 		initialRequest(this.props);

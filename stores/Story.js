@@ -15,7 +15,7 @@ var _cache = {},
 	_stories = {
 		[StoryTypes.TOP_STORIES]: {
 			ids: [],
-			status: AppConstants.status.READY,
+			status: AppConstants.status.INACTIVE,
 			initialized: false
 			pagination: {
 				pageCount: null,
@@ -80,10 +80,12 @@ var Story = StoreUtils.createStore({
 		get: function(id){
 			return _cache[id];
 		},
-		getStoriesByType: function(type){	
-			return _.map(paginateStories(type), function(storyId){
+		getStoriesByType: function(type){
+			var stories =  _.map(paginateStories(type), function(storyId){
 				return _cache[storyId];
 			}, this);
+
+			return _.extend({}, {stories: stroies}, _stories[type]);			
 		},
 		getIdsToLoad: function(type){
 			return _.reject(paginateStories(type), function(storyId){
