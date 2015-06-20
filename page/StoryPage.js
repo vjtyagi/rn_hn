@@ -1,8 +1,9 @@
 var React = require("react-native"),
 	StoryStore = require("../stores/Story"),
+	AppConstants = require("../constants/AppConstants"),
 	StoryActionCreators = require("../actions/StoryActionCreators");
 
-const CHANGE_EVENT = "change";
+const CHANGE_EVENT = AppConstants.events.CHANGE;
 
 var {
 	View,

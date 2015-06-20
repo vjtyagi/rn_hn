@@ -3,6 +3,9 @@ var appConstants = {
         READY: "READY",
         LOADING: "LOADING",
         NO_MORE_RECORDS: "NO_MORE_RECORDS"
+    },
+    events: {
+    	CHANGE: "change"
     }
 }
 
