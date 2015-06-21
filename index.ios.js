@@ -4,9 +4,8 @@
  */
 'use strict';
 
-var React = require('react-native');
-var FrontPage = require("../components/FrontPage");
-var StoryPage = require("../components/StoryPage")
+var React = require('react-native'),
+    App = require("../components/app");
 
 var {
   AppRegistry,
@@ -16,21 +15,23 @@ var {
   NavigatorIOS,
 } = React;
 
+
 var HackerNewsApp = React.createClass({
   render: function() {
     return (
-     <NavigatorIOS 
+     <NavigatorIOS
         style = {styles.container}
-        initialRoute={{ 
+        initialRoute={{
           title: "Front Page",
           component: FrontPage
-        }} 
+        }}
         barTintColor="#F07530"
         titleTextColor="#fff"
-      />     
+      />
     );
   }
 });
+
 
 var styles = StyleSheet.create({
   container: {
@@ -41,4 +42,4 @@ var styles = StyleSheet.create({
 
 
 
-AppRegistry.registerComponent('rn_hn', () => StoryPage);
+AppRegistry.registerComponent('rn_hn', () => App);
