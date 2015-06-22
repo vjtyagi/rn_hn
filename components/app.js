@@ -3,9 +3,8 @@ var NavigationContainer = require("../components/NavigationContainer");
 
 
 var App = React.createClass({
-	
 	render: function(){
-		return (<NavigationContainer ...this.props />)
+		return (<NavigationContainer ...this.props />);
 	}
 });
 

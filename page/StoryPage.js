@@ -1,6 +1,9 @@
-var React = require("react-native"),
+const React = require("react-native"),
+	SideMenu = require('react-native-side-menu'),
+	StoryListView = require("../components/StoryListView"),
 	StoryStore = require("../stores/Story"),
 	AppConstants = require("../constants/AppConstants"),
+	Menu = require("../components/Menu"),
 	StoryActionCreators = require("../actions/StoryActionCreators");
 
 const CHANGE_EVENT = AppConstants.events.CHANGE;
@@ -35,10 +38,11 @@ var StoryPage = React.createClass({
 		this.setState(getState(this.props));
 	},
 	render: function(){
+		var menu = <Menu navigator={this.props.navigator} />;
 		return (
-			<View>
-				<Text>Story Page</Text>
-			</View>
+			<SideMenu menu={menu}>
+				<StoryListView type={this.state.type} navigator={this.props.navigator} />
+			</SideMenu>
 		);
 	},
 	loadMore: function(){
