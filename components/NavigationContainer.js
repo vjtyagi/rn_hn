@@ -5,6 +5,7 @@ var {
 	Navigator
 } = React;
 var NaviationContainer = React.createClass({
+
 	renderScene: function(route, navigator){
 		switch(route.name){
 			case "comments":
