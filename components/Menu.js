@@ -14,13 +14,13 @@ var Menu = React.createClass({
 	},
 	render: function(){
 		return (
-			<View>
-				<Text onPress={()=> {this._onSelect(StoryTypes.TOP_STORIES)} }>Top Stories</Text>
-				<Text onPress={()=> {this._onSelect(StoryTypes.NEW_STORIES)} }>New Stories</Text>
-				<Text onPress={()=> {this._onSelect(StoryTypes.ASK_HN)} }>Ask HN</Text>
-				<Text onPress={()=> {this._onSelect(StoryTypes.SHOW_HN)} }>Show HN</Text>
-				<Text onPress={()=> {this._onSelect(StoryTypes.HN_JOBS)} }>HN Jobs</Text>
-			</View>
+				<View>
+					<Text onPress={()=> {this._onSelect(StoryTypes.TOP_STORIES)} }>Top Stories</Text>
+					<Text onPress={()=> {this._onSelect(StoryTypes.NEW_STORIES)} }>New Stories</Text>
+					<Text onPress={()=> {this._onSelect(StoryTypes.ASK_HN)} }>Ask HN</Text>
+					<Text onPress={()=> {this._onSelect(StoryTypes.SHOW_HN)} }>Show HN</Text>
+					<Text onPress={()=> {this._onSelect(StoryTypes.HN_JOBS)} }>HN Jobs</Text>
+				</View>
 		);
 	}
 });
