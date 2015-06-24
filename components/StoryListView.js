@@ -22,5 +22,46 @@ var StoryListView = React.createClass({
 	}
 });
 
+var styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		alignItems: 'center',
+		backgroundColor: '#F6F6EF',
+		justifyContent: 'center',
+		marginTop: 30
+	},
+	title:{
+		fontSize: 15,
+		margin: 10,
+		fontWeight: 'bold',
+		textAlign: 'left'
+	},
+	postsList: {
+		flex: 1,
+		backgroundColor: '#F6F6EF'
+	},
+	postContainer: {
+		margin: 10
+	},
+	separator: {
+		height: 1,
+		backgroundColor: '#dddddd'
+	},
+	host: {
+		color: '#F07530',
+		fontSize: 14,
+		marginLeft: 10
+	},
+	descriptions: {
+		flexDirection: "row",
+		justifyContent: 'space-between'
+	},
+	info: {
+		fontSize: 12,
+		color: '#AAA',
+		margin:10
+	}
+});
+
 
 module.exports = StoryListView;
