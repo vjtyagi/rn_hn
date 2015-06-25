@@ -2,7 +2,8 @@ const React = require("react-native");
 
 var {
 	Text,
-	View
+	View,
+	ListView
 } = React;
 
 var StoryListView = React.createClass({
@@ -15,10 +16,15 @@ var StoryListView = React.createClass({
 	},
 	render: function(){
 		return (
-			<View>
-				<Text>StoryList View</Text>
-			</View>
+			<ListView
+				style={styles.postsList}
+				dataSource={this.state.dataSource}
+				renderRow={this.renderPost}
+				onEndReached={this.onEndReached} />
 		);
+	},
+	onEndReached: function(){
+		this.props.loadMore();
 	}
 });
 
