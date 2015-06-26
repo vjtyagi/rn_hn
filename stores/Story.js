@@ -12,6 +12,7 @@ const CHANGE_EVENT = "change";
 const PAGE_SIZE = 10;
 
 var _cache = {},
+	_currentStoryType = StoryTypes.TOP_STORIES,
 	_stories = {
 		[StoryTypes.TOP_STORIES]: {
 			ids: [],
