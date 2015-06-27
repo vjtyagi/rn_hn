@@ -86,7 +86,7 @@ var Story = StoreUtils.createStore({
 				return _cache[storyId];
 			}, this);
 
-			return _.extend({}, {stories: stroies}, _stories[type]);			
+			return _.extend({}, {stories: stories}, _stories[type]);
 		},
 		getIdsToLoad: function(type){
 			return _.reject(paginateStories(type), function(storyId){

@@ -41,7 +41,7 @@ var StoryPage = React.createClass({
 		var menu = <Menu navigator={this.props.navigator} />;
 		return (
 			<SideMenu menu={menu}>
-				<StoryListView type={this.props.type} navigator={this.props.navigator} loadMore={this.loadMore} />
+				<StoryListView type={this.props.type} stories = {this.state.stories} navigator={this.props.navigator} loadMore={this.loadMore} />
 			</SideMenu>
 		);
 	},
