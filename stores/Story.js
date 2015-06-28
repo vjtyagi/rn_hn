@@ -12,12 +12,17 @@ const CHANGE_EVENT = "change";
 const PAGE_SIZE = 10;
 
 var _cache = {},
+	_pagination = {
+		page: 0
+	},
+	_isLoading: false,
 	_currentStoryType = StoryTypes.TOP_STORIES,
 	_stories = {
 		[StoryTypes.TOP_STORIES]: {
 			ids: [],
 			status: AppConstants.status.INACTIVE,
-			initialized: false
+			initialized: false,
+			values: [],
 			pagination: {
 				pageCount: null,
 				currentPage: 0,
@@ -92,6 +97,25 @@ var Story = StoreUtils.createStore({
 			return _.reject(paginateStories(type), function(storyId){
 				return !! _cache[storyId];
 			}, this);
+		},
+		getAll: function(type){
+			return {
+				stories: _stories[type].values,
+				isLoading: _isLoading,
+				hasMore: this.hasMore(type),
+				storyType: type
+			};
+		},
+		hasMore: function(type){
+			// check if there are ids corresponding to that type
+			var hasMore = false;
+			//all of the ids present in the array have not been fetched.
+			if(! _stories[type].ids.length || (_stories[type].ids.length > _stories[type].values.length) ){
+				hasMore = true;
+			}
+
+			return hasMore;
+
 		}
 });
 

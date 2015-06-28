@@ -18,14 +18,12 @@ function initialRequest(props){
 }
 
 function getState(props){
-	return StoryStore.getStoriesByType(props.type);
+	return StoryStore.getAll(props.type);
 }
 
 var StoryPage = React.createClass({
 	getInitialState: function(){
-		return {
-			type: StoryTypes.TOP_STORIES
-		};
+		return getState(this.props);
 	},
 	componentDidMount: function(){
 		StoryStore.addEventListener(CHANGE_EVENT, this.onStoryChange);
@@ -41,7 +39,7 @@ var StoryPage = React.createClass({
 		var menu = <Menu navigator={this.props.navigator} />;
 		return (
 			<SideMenu menu={menu}>
-				<StoryListView type={this.props.type} stories = {this.state.stories} navigator={this.props.navigator} loadMore={this.loadMore} />
+				<StoryListView type={this.props.type} isLoading={this.state.isLoading} stories = {this.state.stories} navigator={this.props.navigator} loadMore={this.loadMore} />
 			</SideMenu>
 		);
 	},

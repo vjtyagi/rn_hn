@@ -6,15 +6,22 @@ var {
 	ListView
 } = React;
 
+var dataSource = new ListView.DataSource({
+	rowHasChanged: (row1, row2) => row1 !== row2
+});
+
 var StoryListView = React.createClass({
 	getInitialState: function(){
 		this.stories = [];
-		var dataSource = new ListView.DataSource({
-			rowHasChanged: (row1, row2) => row1 !== row2
-		});
 		return {dataSource: dataSource};
 	},
 	render: function(){
+
+		//check if state is loading state
+		//check if stories array is empty
+		//if stories array is empty and has more is true
+		//call loadmore
+
 		return (
 			<ListView
 				style={styles.postsList}
@@ -24,7 +31,7 @@ var StoryListView = React.createClass({
 		);
 	},
 	onEndReached: function(){
-		this.props.loadMore();
+		this.props.loadMore(this.props.type);
 	}
 });
 
