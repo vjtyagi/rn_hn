@@ -18,6 +18,7 @@ var StoryListView = React.createClass({
 	render: function(){
 
 		//check if state is loading state
+		//show loader if it is loading state
 		//check if stories array is empty
 		//if stories array is empty and has more is true
 		//call loadmore

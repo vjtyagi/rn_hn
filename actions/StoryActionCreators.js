@@ -38,12 +38,30 @@ var StoryActionCreators = {
 			criteria: {
 
 			}
-		}); 		
+		});
+	},
+	_dispatchLoadingAction: function(){
+		this.dispatch({type: ActionTypes.LOADING_MORE_STORIES});
+	},
+	_fetchStoryIds: function(type){
+		return StoryApi.fetchIds(type);
+	},
+	fetchStories: function(){
+		return StoryApi.fetchStories( props.type, ids );
 	},
 	loadMore: function(props){
-		var ids = StoryStore.getIdsToLoad(props.type);
-		//dispatch a loading action
-		this.dispatch({type: ActionTypes.LOADING_MORE_STORIES, data: {}});
+		this._dispatchLoadingAction();
+		var storyIds = StoryStore.getIdsByType(props.type),
+			ids = [];
+		if(!storyIds.length) {
+			//fetch story Ids
+			this._fetchStoryIds( props.type )
+			.then(this.fetchStories)
+			.catch(this.triggerError);
+		} else {
+			//check if there are ids to be fetched.
+			ids = StoryStore.getIdsToLoad( props.type );
+		}
 
 		if(ids.length){
 
@@ -62,7 +80,7 @@ var StoryActionCreators = {
 
 				this.dispatch({
 					type:  ActionTypes.LOAD_MORE_FAILURE,
-					message: "could not load stories"	
+					message: "could not load stories"
 				});
 
 			}).done();

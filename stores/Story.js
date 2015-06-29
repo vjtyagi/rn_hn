@@ -70,7 +70,7 @@ function updateStoriesByType(stories, type){
 
 function paginateStories(type) {
 	var stories = _stories[type],
-		end = stories.pagination.currentPage *  PAGE_SIZE;
+		end = stories.pagination.page *  PAGE_SIZE;
 
 	return _.slice(stories.ids, 0, end);
 }
@@ -116,6 +116,9 @@ var Story = StoreUtils.createStore({
 
 			return hasMore;
 
+		},
+		getIdsByType: function(type){
+			return _stories[type].ids;
 		}
 });
 
@@ -135,8 +138,6 @@ HNDispatcher.register(function(action){
 		case ActionTypes.INITIAL_REQUEST_LOADING:
 			//do something to show loading state
 			break;
-
-		
 		default:
 	}
 });
