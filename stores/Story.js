@@ -135,9 +135,6 @@ HNDispatcher.register(function(action){
 			//trigger an action here to fetch the actual data.
 			break;
 
-		case ActionTypes.INITIAL_REQUEST_LOADING:
-			//do something to show loading state
-			break;
 		default:
 	}
 });
