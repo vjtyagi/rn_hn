@@ -15,9 +15,9 @@ var _cache = {},
 	_pagination = {
 		page: 0
 	},
-	_isLoading: false,
 	_currentStoryType = StoryTypes.TOP_STORIES,
 	_stories = {
+		isLoading: false,
 		[StoryTypes.TOP_STORIES]: {
 			ids: [],
 			status: AppConstants.status.INACTIVE,
@@ -75,6 +75,25 @@ function paginateStories(type) {
 	return _.slice(stories.ids, 0, end);
 }
 
+function updateStoreState(update){
+	_stories = _.extend(_stories, update);
+}
+
+function handleNewStories(data){
+	//check if there's any data to update
+	//if there is no data to update, do not emit change or may be emit change( decided later)
+	if( data.stories.length ){
+		var update =  {
+			isLoading: false,
+			[data.type]: {
+				values: _stories[data.type].values.concat(data.stories)
+			}
+		};
+		updateCache(data.stories);
+		updateStoreState(update);
+	}
+}
+
 var Story = StoreUtils.createStore({
 
 		query: function(type){
@@ -93,7 +112,7 @@ var Story = StoreUtils.createStore({
 
 			return _.extend({}, {stories: stories}, _stories[type]);
 		},
-		getIdsToLoad: function(type){
+		getIdsToFetch: function(type){
 			return _.reject(paginateStories(type), function(storyId){
 				return !! _cache[storyId];
 			}, this);
@@ -125,14 +144,13 @@ var Story = StoreUtils.createStore({
 HNDispatcher.register(function(action){
 
 	switch(action.type){
-		case ActionTypes.LOAD_MORE_SUCCESS:
-			updateStories({stories: action.data.stories, type: action.data.storyType});
-			Story.emitChange();
+		case ActionTypes.LOADING_DATA:
+			updateStoreState({isLoading: true});
+			this.emitChange();
 			break;
-		case ActionTypes.INITIAL_REQUEST_SUCCESS:
-			initialRequest(action.data.ids, type: action.data.storyType);
-			StoryActionCreators.loadMore(action.data.storyType);
-			//trigger an action here to fetch the actual data.
+		case ActionTypes.LOADING_DATA_SUCCESS:
+			handleNewStories(action.data);
+			this.emitChange();
 			break;
 
 		default:
