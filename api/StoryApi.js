@@ -10,18 +10,24 @@ var StoryApi = {
 	/*
 	* @returns a Q<Promise>
 	**/
+
+	function mergeWithCachedData(cachedStories, serverStories){
+		//implement data merging	
+	}
+
 	fetchStoryIds: function(storyType){
 		return this._fetchJSONPromise(StoryTypes[storyType] + "_URL");
 	},
 	fetchStories: function (storyType) {
-		var deferred = Q.defer();
-		var idsToFetch = StoryStore.getIdsToFetch();
+		var deferred = Q.defer(),
+			idsToFetch = StoryStore.getIdsToFetch(),
+			storiesFromCache = StoryStore.fetchStoriesFromCache(storyType);
 
 		if( idsToFetch.length ) {
 
 			this._fetchAll(idsToFetch, type)
 				.then(function(data){
-					deferred.resolve(data);
+					deferred.resolve(mergeWithCachedData(storiesFromCache, data));
 				})
 				.catch(function(data){
 					deferred.reject(data);

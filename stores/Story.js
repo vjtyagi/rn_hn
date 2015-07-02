@@ -12,7 +12,7 @@ const PAGE_SIZE = 10;
 
 var _cache = {},
 	_pagination = {
-		page: 0
+		nextPage: 1
 	},
 	_currentStoryType = StoryTypes.TOP_STORIES,
 	_stories = {
@@ -54,7 +54,7 @@ function updateCache(stories){
 
 function paginateStories(type) {
 	var stories = _stories[type],
-		end = stories.pagination.page *  PAGE_SIZE;
+		end = stories.pagination.nextPage *  PAGE_SIZE;
 
 	return _.slice(stories.ids, 0, end);
 }
@@ -68,6 +68,7 @@ function handleNewStories(data){
 	_stories.isLoading = false;
 	_stories[data.type].values = _stories[data.type].values.concat(data.stories);
 	updateCache(data.stories);
+	_stories.pagination.nextPage += 1;
 }
 
 function handleStoryIds(data){
@@ -77,9 +78,6 @@ function handleStoryIds(data){
 	StoryActionCreators.fetchStories(data.type);
 }
 
-function updatePagination(){
-
-}
 
 var Story = StoreUtils.createStore({
 		contains: function(id){
@@ -93,11 +91,24 @@ var Story = StoreUtils.createStore({
 				return !! _cache[storyId];
 			}, this);
 		},
+		getPaginatedIds: function(type){
+			return paginateStories(type);
+		},
 		getStoriesByType: function(type){
 			return _stories[type];
 		},
 		getAll: function(){
 			return _stories;
+		},
+		fetchStoriesFromCache: function(storyType){
+			var storyIds = getPaginatedIds(storyType), 
+				cachedStoryIds = _.filter(storyIds, function(id){
+					return !! _cache[id];
+				}, this),
+				cachedStories = _.map(cachedStoryIds, function(storyId){
+					return _cache[storyId];
+				}, this);
+			return cachedStories;
 		},
 		hasMore: function(type){
 			// check if there are ids corresponding to that type
