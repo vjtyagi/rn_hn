@@ -14,7 +14,7 @@ var {
 } = React;
 
 function initialRequest(props){
-	StoryActionCreators.loadStoryIds(props.type);
+	StoryActionCreators.initializeStories(props.type);
 }
 
 function getState(props){
@@ -49,7 +49,7 @@ var StoryPage = React.createClass({
 		);
 	},
 	loadMore: function(){
-		StoryActionCreators.loadMore(props);
+		StoryActionCreators.loadMoreStories(props);
 	}
 });
 

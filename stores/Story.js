@@ -1,12 +1,11 @@
-var {EventEmitter} = require("events"),
-	HNDispatcher = require("../dispatcher/HNDispatcher"),
+var HNDispatcher = require("../dispatcher/HNDispatcher"),
 	assign = require("object-assign"),
 	ActionTypes = require("../constants/ActionTypes"),
 	StoryTypes = require("../constants/StoryTypes"),
 	_ = require("lodash"),
 	StoreUtils = require("../utils/StoreUtils"),
 	AppConstants = require("../constants/AppConstants"),
-	StoryActionCreator = require("../actions/StoryActionCreators");
+	StoryActionCreators = require("../actions/StoryActionCreators");
 
 const CHANGE_EVENT = "change";
 const PAGE_SIZE = 10;
@@ -20,26 +19,28 @@ var _cache = {},
 		isLoading: false,
 		[StoryTypes.TOP_STORIES]: {
 			ids: [],
-			status: AppConstants.status.INACTIVE,
 			initialized: false,
-			values: [],
-			pagination: {
-				pageCount: null,
-				currentPage: 0,
-				total: 0
-			}
+			values: []
 		},
 		[StoryTypes.NEW_STORIES]: {
-			ids: []
+			ids: [],
+			initialized: false,
+			values: []
 		},
 		[StoryTypes.ASK_HN]: {
-			ids: []
+			ids: [],
+			initialized: false,
+			values: []
 		},
 		[StoryTypes.SHOW_HN]: {
-			ids: []
+			ids: [],
+			initialized: false,
+			values: []
 		},
 		[StoryTypes.HN_JOBS]: {
-			ids: []
+			ids: [],
+			initialized: false,
+			values: []
 		}
 	};
 
@@ -49,24 +50,7 @@ function updateCache(stories){
 	}, this);
 }
 
-function updateStories({stories, type}){
-	updateCache(stories);
-	updateStoriesByType(stories, type);
-}
 
-function initialRequest(storyIds, type){
-	updateStoryIds(type);
-}
-
-function updateStoryIds(storyIds, type){
-	_stories.type.ids = _stories.type.ids.concat(storyIds);
-}
-
-function updateStoriesByType(stories, type){
-	_stories[type].ids = _stories[type].ids.concat( _.pluck(stories, "id") );
-	_stories[type].pagination.currentPage += 1;
-
-}
 
 function paginateStories(type) {
 	var stories = _stories[type],
@@ -81,49 +65,39 @@ function updateStoreState(update){
 
 function handleNewStories(data){
 	//check if there's any data to update
-	//if there is no data to update, do not emit change or may be emit change( decided later)
-	if( data.stories.length ){
-		var update =  {
-			isLoading: false,
-			[data.type]: {
-				values: _stories[data.type].values.concat(data.stories)
-			}
-		};
-		updateCache(data.stories);
-		updateStoreState(update);
-	}
+	_stories.isLoading = false;
+	_stories[data.type].values = _stories[data.type].values.concat(data.stories);
+	updateCache(data.stories);
+}
+
+function handleStoryIds(data){
+	_stories[data.type].ids = data.ids;
+	_stories[data.type].initialized = true;
+	//trigger action for loading the stories
+	StoryActionCreators.fetchStories(data.type);
+}
+
+function updatePagination(){
+
 }
 
 var Story = StoreUtils.createStore({
-
-		query: function(type){
-			return _stories[type];
-		},
 		contains: function(id){
 			return _.has(_cache, id);
 		},
 		get: function(id){
 			return _cache[id];
 		},
-		getStoriesByType: function(type){
-			var stories =  _.map(paginateStories(type), function(storyId){
-				return _cache[storyId];
-			}, this);
-
-			return _.extend({}, {stories: stories}, _stories[type]);
-		},
 		getIdsToFetch: function(type){
 			return _.reject(paginateStories(type), function(storyId){
 				return !! _cache[storyId];
 			}, this);
 		},
-		getAll: function(type){
-			return {
-				stories: _stories[type].values,
-				isLoading: _isLoading,
-				hasMore: this.hasMore(type),
-				storyType: type
-			};
+		getStoriesByType: function(type){
+			return _stories[type];
+		},
+		getAll: function(){
+			return _stories;
 		},
 		hasMore: function(type){
 			// check if there are ids corresponding to that type
@@ -148,7 +122,10 @@ HNDispatcher.register(function(action){
 			updateStoreState({isLoading: true});
 			this.emitChange();
 			break;
-		case ActionTypes.LOADING_DATA_SUCCESS:
+		case ActionTypes.STORY_IDS_LOAD_SUCCESS:
+			handleStoryIds(action.data);
+			break;
+		case ActionTypes.LOADING_STORIES_SUCCESS:
 			handleNewStories(action.data);
 			this.emitChange();
 			break;
