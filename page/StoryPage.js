@@ -10,7 +10,7 @@ const CHANGE_EVENT = AppConstants.events.CHANGE;
 
 var {
 	View,
-	Text
+	Text,
 } = React;
 
 function initialRequest(props){

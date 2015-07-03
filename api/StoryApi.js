@@ -5,16 +5,16 @@ var Q = require("q"),
 	StoryStore = require("../stores/Story"),
 	responseFormat = ".json"
 
+function mergeStories(cachedStories, serverStories){
+	//implement data merging
+	return cachedStories.concat(serverStories);	
+}
+
 var StoryApi = {
 
 	/*
 	* @returns a Q<Promise>
 	**/
-
-	function mergeWithCachedData(cachedStories, serverStories){
-		//implement data merging	
-	}
-
 	fetchStoryIds: function(storyType){
 		return this._fetchJSONPromise(StoryTypes[storyType] + "_URL");
 	},
@@ -25,18 +25,22 @@ var StoryApi = {
 
 		if( idsToFetch.length ) {
 
-			this._fetchAll(idsToFetch, type)
+			this._fetchAll(idsToFetch, storyType)
 				.then(function(data){
-					deferred.resolve(mergeWithCachedData(storiesFromCache, data));
+					deferred.resolve({
+						stories: mergeStories(storiesFromCache, data),
+						type: storyType
+					});
 				})
 				.catch(function(data){
 					deferred.reject(data);
-				});
+				}).done();
 
 		} else {
 
 			deferred.resolve({
-				stories: []
+				type: storyType,
+				stories: storiesFromCache
 			});
 		}
 
