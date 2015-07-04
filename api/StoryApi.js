@@ -46,9 +46,6 @@ var StoryApi = {
 
 		return deferred.promise;
 	},
-	isStoryTypeInitialized: function(type){
-		return StoryStore.getStoriesByType(type).initialized;
-	},
 	_fetchAll: function(ids, type){
 		var promises = this.getStoryPromises(ids);
 		return Q.all( promises );
