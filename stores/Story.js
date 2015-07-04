@@ -1,20 +1,19 @@
-var HNDispatcher = require("../dispatcher/HNDispatcher"),
-	assign = require("object-assign"),
+var assign = require("object-assign"),
+	_ = require("lodash"),
+	HNDispatcher = require("../dispatcher/HNDispatcher"),
 	ActionTypes = require("../constants/ActionTypes"),
 	StoryTypes = require("../constants/StoryTypes"),
-	_ = require("lodash"),
 	StoreUtils = require("../utils/StoreUtils"),
 	AppConstants = require("../constants/AppConstants"),
 	StoryActionCreators = require("../actions/StoryActionCreators");
 
-const CHANGE_EVENT = "change";
+const CHANGE_EVENT = AppConstants.events.CHANGE;
 const PAGE_SIZE = 10;
 
 var _cache = {},
 	_pagination = {
 		nextPage: 1
 	},
-	_currentStoryType = StoryTypes.TOP_STORIES,
 	_stories = {
 		isLoading: false,
 		[StoryTypes.TOP_STORIES]: {
@@ -54,7 +53,7 @@ function updateCache(stories){
 
 function paginateStories(type) {
 	var stories = _stories[type],
-		end = stories.pagination.nextPage *  PAGE_SIZE;
+		end = _pagination.nextPage *  PAGE_SIZE;
 
 	return _.slice(stories.ids, 0, end);
 }
@@ -68,7 +67,7 @@ function handleNewStories(data){
 	_stories.isLoading = false;
 	_stories[data.type].values = _stories[data.type].values.concat(data.stories);
 	updateCache(data.stories);
-	_stories.pagination.nextPage += 1;
+	_pagination.nextPage += 1;
 }
 
 function handleStoryIds(data){
