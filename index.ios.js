@@ -5,7 +5,7 @@
 'use strict';
 
 var React = require('react-native'),
-    App = require("../components/app");
+    App = require("./components/app");
 
 var {
   AppRegistry,

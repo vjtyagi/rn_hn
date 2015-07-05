@@ -13,11 +13,11 @@ var StoreUtils = {
 			emitChange: function () {
 				emitter.emit( CHANGE_EVENT );
 			},
-			addEventListener: function ( callback ) {
-				emitter.on( CHANGE_EVENT, callback );
+			addEventListener: function ( event, callback ) {
+				emitter.on( event, callback );
 			},
-			removeEventListener: function ( callback ) {
-				emitter.removeListener( CHANGE_EVENT, callback) ;
+			removeEventListener: function ( event, callback ) {
+				emitter.removeListener( event, callback) ;
 			}
 		}, spec);
 

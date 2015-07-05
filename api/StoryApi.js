@@ -1,6 +1,6 @@
 var Q = require("q"),
 	_ = require("lodash"),
-	config = require("../config"),
+	config = require("../config/config"),
 	StoryTypes = require("../constants/StoryTypes"),
 	StoryStore = require("../stores/Story"),
 	responseFormat = ".json"

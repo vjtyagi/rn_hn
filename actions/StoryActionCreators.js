@@ -4,6 +4,11 @@ var Q = require("q"),
 	ActionTypes = require("../constants/ActionTypes"),
 	StoryTypes = require("../constants/StoryTypes");
 
+//Todo make the action creators slim
+//move all the api call code to api service
+//action creators should have simple function with or without args
+//which just dispatch some actions with or without data.
+
 var StoryActionCreators = {
 	initializeStories: function(type){
 		this._dispatchLoadingAction();
@@ -13,7 +18,7 @@ var StoryActionCreators = {
 		this._dispatchLoadingAction();
 		this.fetchStories(type);
 	},
-	fetchStoryIds: function(storyType){
+	fetchStoryIds: function(type){
 		
 		StoryApi.fetchStoryIds(type)
 			.then(function(data){
@@ -47,7 +52,7 @@ var StoryActionCreators = {
 		
 	},
 	_dispatchLoadingAction: function(){
-		this.dispatch({type: ActionTypes.LOADING_DATA});
+		HNDispatcher.dispatch({type: ActionTypes.LOADING_DATA});
 	}
 };
 

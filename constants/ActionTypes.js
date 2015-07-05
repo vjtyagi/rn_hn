@@ -1,5 +1,5 @@
 
-var keyMirror = require("keymirror");
+var keyMirror = require("keyMirror");
 
 var HNConstants = keyMirror({
 	LOADING_DATA: null,

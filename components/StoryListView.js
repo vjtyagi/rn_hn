@@ -3,7 +3,8 @@ const React = require("react-native");
 var {
 	Text,
 	View,
-	ListView
+	ListView,
+	StyleSheet
 } = React;
 
 var dataSource = new ListView.DataSource({

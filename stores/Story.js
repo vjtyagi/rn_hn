@@ -130,14 +130,14 @@ HNDispatcher.register(function(action){
 	switch(action.type){
 		case ActionTypes.LOADING_DATA:
 			updateStoreState({isLoading: true});
-			this.emitChange();
+			Story.emitChange();
 			break;
 		case ActionTypes.STORY_IDS_LOAD_SUCCESS:
 			handleStoryIds(action.data);
 			break;
 		case ActionTypes.LOADING_STORIES_SUCCESS:
 			handleNewStories(action.data);
-			this.emitChange();
+			Story.emitChange();
 			break;
 
 		default:

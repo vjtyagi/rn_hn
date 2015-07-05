@@ -1,10 +1,10 @@
 const React = require("react-native");
-const StoryTypes = require("../components/StoryTypes");
-const StoryPage = require("../components/StoryPage");
+const StoryTypes = require("../constants/StoryTypes");
+const StoryPage = require("../page/StoryPage");
 var {
 	Navigator
 } = React;
-var NaviationContainer = React.createClass({
+var NavigationContainer = React.createClass({
 
 	renderScene: function(route, navigator){
 		switch(route.name){

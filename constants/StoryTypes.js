@@ -1,4 +1,4 @@
-var keyMirror = require("key-mirror");
+var keyMirror = require("keyMirror");
 
 var storyTypes = keyMirror({
 	TOP_STORIES: null,
