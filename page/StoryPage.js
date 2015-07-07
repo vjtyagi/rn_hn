@@ -14,6 +14,7 @@ var {
 } = React;
 
 function initialRequest(props){
+	console.log("initialRequest called");
 	StoryActionCreators.initializeStories(props.type);
 }
 

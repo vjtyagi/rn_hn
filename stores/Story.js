@@ -16,27 +16,27 @@ var _cache = {},
 	},
 	_stories = {
 		isLoading: false,
-		[StoryTypes.TOP_STORIES]: {
+		TOP_STORIES: {
 			ids: [],
 			initialized: false,
 			values: []
 		},
-		[StoryTypes.NEW_STORIES]: {
+		NEW_STORIES: {
 			ids: [],
 			initialized: false,
 			values: []
 		},
-		[StoryTypes.ASK_HN]: {
+		ASK_HN: {
 			ids: [],
 			initialized: false,
 			values: []
 		},
-		[StoryTypes.SHOW_HN]: {
+		SHOW_HN: {
 			ids: [],
 			initialized: false,
 			values: []
 		},
-		[StoryTypes.HN_JOBS]: {
+		HN_JOBS: {
 			ids: [],
 			initialized: false,
 			values: []

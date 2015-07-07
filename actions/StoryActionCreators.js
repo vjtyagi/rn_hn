@@ -19,9 +19,12 @@ var StoryActionCreators = {
 		this.fetchStories(type);
 	},
 	fetchStoryIds: function(type){
-		
+		console.log("fetchStoryIds called");
+		console.log("type "+ type);
 		StoryApi.fetchStoryIds(type)
 			.then(function(data){
+				console.log("storyIds");
+				console.log(data);
 				HNDispatcher.dispatch({
 					type: ActionTypes.STORY_IDS_LOAD_SUCCESS,
 					data: data
