@@ -27,7 +27,10 @@ var StoryActionCreators = {
 				console.log(data);
 				HNDispatcher.dispatch({
 					type: ActionTypes.STORY_IDS_LOAD_SUCCESS,
-					data: data
+					data: {
+						type: type,
+						ids: data
+					}
 				});
 			})
 			.catch( function(data){
@@ -38,9 +41,11 @@ var StoryActionCreators = {
 			}).done();
 	},
 	fetchStories: function(type){
-
+		console.log('fetch stories called '+ type);
 		StoryApi.fetchStories(type)
 		.then( function(data){
+			console.log('fetch stories response');
+			console.log(data);
 			HNDispatcher.dispatch({
 				type: ActionTypes.LOADING_STORIES_SUCCESS,
 				data: data

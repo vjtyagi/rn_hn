@@ -16,9 +16,11 @@ var StoryApi = {
 	* @returns a Q<Promise>
 	**/
 	fetchStoryIds: function(storyType){
-		return this._fetchJSONPromise(StoryTypes[storyType] + "_URL");
+		console.log('api function called');
+		return this._fetchJSONPromise(config[StoryTypes[storyType] + "_URL"]);
 	},
 	fetchStories: function (storyType) {
+		debug;
 		var deferred = Q.defer(),
 			idsToFetch = StoryStore.getIdsToFetch(),
 			storiesFromCache = StoryStore.fetchStoriesFromCache(storyType);
