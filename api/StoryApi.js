@@ -3,7 +3,7 @@ var Q = require("q"),
 	config = require("../config/config"),
 	StoryTypes = require("../constants/StoryTypes"),
 	StoryStore = require("../stores/Story"),
-	responseFormat = ".json"
+	responseFormat = ".json";
 
 function mergeStories(cachedStories, serverStories){
 	//implement data merging
@@ -16,14 +16,14 @@ var StoryApi = {
 	* @returns a Q<Promise>
 	**/
 	fetchStoryIds: function(storyType){
-		console.log('api function called');
 		return this._fetchJSONPromise(config[StoryTypes[storyType] + "_URL"]);
 	},
 	fetchStories: function (storyType) {
-		debug;
-		var deferred = Q.defer(),
-			idsToFetch = StoryStore.getIdsToFetch(),
-			storiesFromCache = StoryStore.fetchStoriesFromCache(storyType);
+		console.log("storystore");
+		console.log(typeof StoryStore.getIdsToFetch);
+		var deferred = Q.defer();
+		var idsToFetch = StoryStore.getIdsToFetch();
+		var storiesFromCache = StoryStore.fetchStoriesFromCache(storyType);
 
 		if( idsToFetch.length ) {
 

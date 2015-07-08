@@ -1,5 +1,4 @@
-var assign = require("object-assign"),
-	_ = require("lodash"),
+var _ = require("lodash"),
 	HNDispatcher = require("../dispatcher/HNDispatcher"),
 	ActionTypes = require("../constants/ActionTypes"),
 	StoryTypes = require("../constants/StoryTypes"),
@@ -143,5 +142,8 @@ HNDispatcher.register(function(action){
 		default:
 	}
 });
+
+console.log("StoryStore");
+console.log(Story);
 
 module.exports = Story;
