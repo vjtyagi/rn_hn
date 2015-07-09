@@ -49,6 +49,10 @@ function updateCache(stories){
 }
 
 
+function updateStoreState(update){
+	_stories = _.extend(_stories, update);
+}
+
 
 function paginateStories(type) {
 	var stories = _stories[type],
@@ -114,9 +118,7 @@ var Story = StoreUtils.createStore({
 			if(! _stories[type].ids.length || (_stories[type].ids.length > _stories[type].values.length) ){
 				hasMore = true;
 			}
-
 			return hasMore;
-
 		},
 		getIdsByType: function(type){
 			return _stories[type].ids;
