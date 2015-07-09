@@ -40,10 +40,6 @@ var StoryPage = React.createClass({
 		console.log("current state");
 		console.log(this.state);
 		var menu = <Menu navigator={this.props.navigator} />;
-		return (<View>
-			<Text>This is my app</Text>
-		</View>);
-
 		// return (
 		// 	<SideMenu menu={menu}>
 		// 		<StoryListView
@@ -54,6 +50,13 @@ var StoryPage = React.createClass({
 		// 			loadMore={this.loadMore} />
 		// 	</SideMenu>
 		// );
+		// 
+		return (
+			<StoryListView 
+				isLoading={this.state.isLoading}
+				stories={this.state}
+				type={this.props.type} />
+		)
 	},
 	loadMore: function(){
 		StoryActionCreators.loadMoreStories(props);

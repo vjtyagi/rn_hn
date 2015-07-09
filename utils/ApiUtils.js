@@ -1,4 +1,4 @@
-var config = require("./config");
+var config = require("../config/config");
 var URL = require('url');
 
 module.exports = {
