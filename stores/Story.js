@@ -4,7 +4,7 @@ var _ = require("lodash"),
 	StoryTypes = require("../constants/StoryTypes"),
 	StoreUtils = require("../utils/StoreUtils"),
 	AppConstants = require("../constants/AppConstants"),
-	StoryActionCreators = require("../actions/StoryActionCreators");
+	StoryApi = require("../api/StoryApi");
 
 const CHANGE_EVENT = AppConstants.events.CHANGE;
 const PAGE_SIZE = 10;
@@ -57,23 +57,35 @@ function paginateStories(type) {
 	return _.slice(stories.ids, 0, end);
 }
 
-function updateStoreState(update){
-	_stories = _.extend(_stories, update);
-}
+
 
 function handleNewStories(data){
 	//check if there's any data to update
 	_stories.isLoading = false;
-	_stories[data.type].values = _stories[data.type].values.concat(data.stories);
 	updateCache(data.stories);
+	_stories[data.type].values = getStoriesFromCache(paginateStories(data.type));
 	_pagination.nextPage += 1;
 }
+
+function getStoriesFromCache(ids){
+	return _.map(ids, function(id){
+		return _cache[id];
+	});
+}
+
+function loadStories(data){
+	_stories.isLoading = true;
+	var idsToFetch = Story.getIdsToFetch(data.type);
+	StoryApi.fetchStories(data.type, idsToFetch);
+}
+
 
 function handleStoryIds(data){
 	_stories[data.type].ids = data.ids;
 	_stories[data.type].initialized = true;
 	//trigger action for loading the stories
-	StoryActionCreators.fetchStories(data.type);
+	var idsToFetch = Story.getIdsToFetch(data.type);
+	StoryApi.fetchStories(data.type, idsToFetch);
 }
 
 
@@ -89,24 +101,11 @@ var Story = StoreUtils.createStore({
 				return !! _cache[storyId];
 			}, this);
 		},
-		getPaginatedIds: function(type){
-			return paginateStories(type);
-		},
 		getStoriesByType: function(type){
 			return _stories[type];
 		},
 		getAll: function(){
 			return _stories;
-		},
-		fetchStoriesFromCache: function(storyType){
-			var storyIds = getPaginatedIds(storyType), 
-				cachedStoryIds = _.filter(storyIds, function(id){
-					return !! _cache[id];
-				}, this),
-				cachedStories = _.map(cachedStoryIds, function(storyId){
-					return _cache[storyId];
-				}, this);
-			return cachedStories;
 		},
 		hasMore: function(type){
 			// check if there are ids corresponding to that type
@@ -136,6 +135,10 @@ HNDispatcher.register(function(action){
 			break;
 		case ActionTypes.LOADING_STORIES_SUCCESS:
 			handleNewStories(action.data);
+			Story.emitChange();
+			break;
+		case ActionTypes.LOAD_MORE_STORIES:
+			loadStories(action.data);
 			Story.emitChange();
 			break;
 

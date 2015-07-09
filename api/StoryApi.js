@@ -2,7 +2,6 @@ var Q = require("q"),
 	_ = require("lodash"),
 	config = require("../config/config"),
 	StoryTypes = require("../constants/StoryTypes"),
-	StoryStore = require("../stores/Story"),
 	responseFormat = ".json";
 
 function mergeStories(cachedStories, serverStories){
@@ -18,19 +17,14 @@ var StoryApi = {
 	fetchStoryIds: function(storyType){
 		return this._fetchJSONPromise(config[StoryTypes[storyType] + "_URL"]);
 	},
-	fetchStories: function (storyType) {
-		console.log("storystore");
-		console.log(typeof StoryStore.getIdsToFetch);
+	fetchStories: function (storyType, idsToFetch) {
 		var deferred = Q.defer();
-		var idsToFetch = StoryStore.getIdsToFetch();
-		var storiesFromCache = StoryStore.fetchStoriesFromCache(storyType);
-
 		if( idsToFetch.length ) {
 
 			this._fetchAll(idsToFetch, storyType)
 				.then(function(data){
 					deferred.resolve({
-						stories: mergeStories(storiesFromCache, data),
+						stories: data,
 						type: storyType
 					});
 				})
@@ -42,7 +36,7 @@ var StoryApi = {
 
 			deferred.resolve({
 				type: storyType,
-				stories: storiesFromCache
+				stories: []
 			});
 		}
 
@@ -53,7 +47,7 @@ var StoryApi = {
 		return Q.all( promises );
 	},
 	_getStoryPromises: function(ids){
-		return _.map(ids, function(){
+		return _.map(ids, function(id){
 			return this._createStoryPromise(id);
 		}, this);
 	},

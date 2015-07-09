@@ -15,8 +15,13 @@ var StoryActionCreators = {
 		this.fetchStoryIds(type);
 	},
 	loadMoreStories: function(type){
-		this._dispatchLoadingAction();
-		this.fetchStories(type);
+		
+		HNDispatcher.dispatch({
+			type: ActionTypes.LOAD_MORE_STORIES,
+			data: {
+				type: type
+			}
+		});
 	},
 	fetchStoryIds: function(type){
 		console.log("fetchStoryIds called");
