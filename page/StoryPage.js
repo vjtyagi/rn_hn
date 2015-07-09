@@ -37,6 +37,8 @@ var StoryPage = React.createClass({
 		this.setState(getState(this.props));
 	},
 	render: function(){
+		console.log("current state");
+		console.log(this.state);
 		var menu = <Menu navigator={this.props.navigator} />;
 		return (<View>
 			<Text>This is my app</Text>

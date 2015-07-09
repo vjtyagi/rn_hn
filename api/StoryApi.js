@@ -2,6 +2,8 @@ var Q = require("q"),
 	_ = require("lodash"),
 	config = require("../config/config"),
 	StoryTypes = require("../constants/StoryTypes"),
+	ActionTypes = require('../constants/ActionTypes'),
+	HNDispatcher = require("../dispatcher/HNDispatcher"),
 	responseFormat = ".json";
 
 function mergeStories(cachedStories, serverStories){
@@ -18,32 +20,42 @@ var StoryApi = {
 		return this._fetchJSONPromise(config[StoryTypes[storyType] + "_URL"]);
 	},
 	fetchStories: function (storyType, idsToFetch) {
-		var deferred = Q.defer();
+
 		if( idsToFetch.length ) {
 
 			this._fetchAll(idsToFetch, storyType)
 				.then(function(data){
-					deferred.resolve({
-						stories: data,
-						type: storyType
+					HNDispatcher.dispatch({
+						type: ActionTypes.LOADING_STORIES_SUCCESS, 
+						data: {
+							stories: data,
+							type: storyType
+						}
 					});
 				})
 				.catch(function(data){
-					deferred.reject(data);
+					HNDispatcher.dispatch({
+						type: ActionTypes.LOADING_STORIES_FAILURE,
+						data: {
+							stories: data,
+							type: storyType
+						}
+					});
 				}).done();
 
 		} else {
 
-			deferred.resolve({
-				type: storyType,
-				stories: []
+			HNDispatcher.dispatch({
+				type: ActionTypes.LOADING_STORIES_SUCCESS,
+				data: {
+					stories: [],
+					type: storyType
+				}
 			});
 		}
-
-		return deferred.promise;
 	},
 	_fetchAll: function(ids, type){
-		var promises = this.getStoryPromises(ids);
+		var promises = this._getStoryPromises(ids);
 		return Q.all( promises );
 	},
 	_getStoryPromises: function(ids){
