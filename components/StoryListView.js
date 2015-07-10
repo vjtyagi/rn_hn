@@ -12,19 +12,8 @@ var {
 	ActivityIndicatorIOS
 } = React;
 
-
+var baseDataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2 });
 var StoryListView = React.createClass({
-	getInitialState: function(){
-		var baseDataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => true});
-		var stories = this.props.stories[this.props.type].values;
-		
-		if( stories && stories.length ){
-		 	baseDataSource.cloneWithRows(stories);	
-		}
-		return {
-			dataSource: baseDataSource
-		}
-	},
 	renderIndicator: function(){
 		var refreshIndicator = (this.props.isLoading == true)? (<RefreshIndicator />): null;
 		return refreshIndicator;
@@ -62,11 +51,12 @@ var StoryListView = React.createClass({
 		);
 	},
 	render: function(){
-		
+		var stories = this.props.stories[this.props.type].values;
+		var dataSource = baseDataSource.cloneWithRows(stories)
 		return (
 				<ListView
 				  style={styles.postsList}
-				  dataSource={this.state.dataSource}
+				  dataSource={dataSource}
 				  renderHeader={this.renderIndicator}
 				  onEndReached={this.loadMore}
 				  renderRow={this.renderPost} />
