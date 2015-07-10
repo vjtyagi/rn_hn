@@ -14,6 +14,18 @@ var ServerActionCreators = {
             type: ActionTypes.LOADING_STORIES_FAILURE,
             data: payload
         });
+    },
+    loadedStoryIds: function(payload){
+        HNDispatcher.dispatch({
+            type: ActionTypes.STORY_IDS_LOAD_SUCCESS,
+            data: payload
+        });
+    },
+    failedToLoadStoryIds: function(payload){
+        HNDispatcher.dispatch({
+            type: ActionTypes.STORY_IDS_LOAD_FAILURE,
+            data: payload
+        });
     }
 };
 

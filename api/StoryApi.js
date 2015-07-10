@@ -13,7 +13,20 @@ var StoryApi = {
 	* @returns a Q<Promise>
 	**/
 	fetchStoryIds: function(storyType){
-		return this._fetchJSONPromise(config[StoryTypes[storyType] + "_URL"]);
+		this._fetchJSONPromise(config[StoryTypes[storyType] + "_URL"])
+		.then(function(data){
+			ServerActionCreators.loadedStoryIds({
+				type: storyType,
+				ids: data
+			});
+		})
+		.catch(function(data){
+			ServerActionCreators.failedToLoadStoryIds({
+				type: storyType,
+				message: "Failed to load story ids"
+			});
+		})
+		.done();
 	},
 	fetchStories: function (storyType, idsToFetch) {
 
