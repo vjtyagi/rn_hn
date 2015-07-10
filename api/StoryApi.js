@@ -2,14 +2,10 @@ var Q = require("q"),
 	_ = require("lodash"),
 	config = require("../config/config"),
 	StoryTypes = require("../constants/StoryTypes"),
-	ActionTypes = require('../constants/ActionTypes'),
-	HNDispatcher = require("../dispatcher/HNDispatcher"),
+	ServerActionCreators = require("../actions/ServerActionCreators"),
 	responseFormat = ".json";
 
-function mergeStories(cachedStories, serverStories){
-	//implement data merging
-	return cachedStories.concat(serverStories);	
-}
+
 
 var StoryApi = {
 
@@ -25,32 +21,22 @@ var StoryApi = {
 
 			this._fetchAll(idsToFetch, storyType)
 				.then(function(data){
-					HNDispatcher.dispatch({
-						type: ActionTypes.LOADING_STORIES_SUCCESS, 
-						data: {
-							stories: data,
-							type: storyType
-						}
+					ServerActionCreators.loadedStories({
+						type: storyType,
+						stories: data
 					});
 				})
 				.catch(function(data){
-					HNDispatcher.dispatch({
-						type: ActionTypes.LOADING_STORIES_FAILURE,
-						data: {
-							stories: data,
-							type: storyType
-						}
+					ServerActionCreators.failedToLoadStories({
+						type: storyType,
+						message: "Failed to load stories"
 					});
 				}).done();
 
 		} else {
-
-			HNDispatcher.dispatch({
-				type: ActionTypes.LOADING_STORIES_SUCCESS,
-				data: {
-					stories: [],
-					type: storyType
-				}
+			ServerActionCreators.loadedStories({
+				type: storyType,
+				stories: []
 			});
 		}
 	},

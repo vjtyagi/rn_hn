@@ -52,7 +52,7 @@ var StoryListView = React.createClass({
 	},
 	render: function(){
 		var stories = this.props.stories[this.props.type].values;
-		var dataSource = baseDataSource.cloneWithRows(stories)
+		var dataSource = baseDataSource.cloneWithRows(stories);
 		return (
 				<ListView
 				  style={styles.postsList}
