@@ -2,8 +2,28 @@ const React = require("react-native");
 const StoryTypes = require("../constants/StoryTypes");
 const StoryPage = require("../page/StoryPage");
 var {
-	Navigator
+	Navigator,
+	StyleSheet,
+	Text
 } = React;
+
+
+var navigationRouteMapper = {
+	LeftButton: function(route, navigator, index, navState){
+		return null;
+	},
+	RightButton: function(route, navigator, index, navState){
+		return null;
+	},
+	Title: function(route, navigator, index, navState){
+		return (
+			<Text style={[styles.navBarText, styles.navBarTitleText]}>
+				{route.title}
+			</Text>
+		);
+	}
+};
+
 var NavigationContainer = React.createClass({
 
 	renderScene: function(route, navigator){
@@ -27,10 +47,30 @@ var NavigationContainer = React.createClass({
 	},
 	render: function(){
 		return (
-			<Navigator initialRoute={{name: StoryTypes.TOP_STORIES, index: 0}}
+			<Navigator 
+				initialRoute={{title: StoryTypes.TOP_STORIES, index: 0}}
 				renderScene = {this.renderScene}
-			/>
+				navigationBar={
+					<Navigator.NavigationBar 
+					routeMapper={navigationRouteMapper}
+					style={styles.navBar}/>
+				}/>
 		);
+	}
+});
+
+var styles = StyleSheet.create({
+	navBar: {
+		backgroundColor: "#F07530"
+	},
+	navBarText: {
+		fontSize: 16,
+    	marginVertical: 10,
+	},
+	navBarTitleText: {
+		fontWeight: '500',
+    	marginVertical: 9,
+    	color: "#fff"
 	}
 });
 

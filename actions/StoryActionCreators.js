@@ -17,8 +17,6 @@ var StoryActionCreators = {
 		});
 	},
 	fetchStoryIds: function(type){
-		console.log("fetchStoryIds called");
-		console.log("type "+ type);
 		StoryApi.fetchStoryIds(type);
 	},
 	_dispatchLoadingAction: function(){
