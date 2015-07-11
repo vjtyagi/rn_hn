@@ -54,12 +54,14 @@ var StoryListView = React.createClass({
 		var stories = this.props.stories[this.props.type].values;
 		var dataSource = baseDataSource.cloneWithRows(stories);
 		return (
+			<View style={styles.listContainer}>
 				<ListView
 				  style={styles.postsList}
 				  dataSource={dataSource}
 				  renderHeader={this.renderIndicator}
 				  onEndReached={this.loadMore}
 				  renderRow={this.renderPost} />
+			</View>
 			 			
 		);
 	},
@@ -79,18 +81,21 @@ var styles = StyleSheet.create({
 		justifyContent: 'center',
 		marginTop: 30
 	},
+	listContainer: {
+		flex: 1,
+		marginTop: 60,
+		backgroundColor: '#F6F6EF',
+		padding: 10
+	},
 	title:{
 		fontSize: 15,
-		margin: 10,
-		fontWeight: 'bold',
-		textAlign: 'left'
+		textAlign: 'left',
+		marginTop: 5,
+		marginBottom: 5
 	},
 	postsList: {
 		flex: 1,
 		backgroundColor: '#F6F6EF'
-	},
-	postContainer: {
-		margin: 10
 	},
 	separator: {
 		height: 1,
@@ -99,7 +104,7 @@ var styles = StyleSheet.create({
 	host: {
 		color: '#F07530',
 		fontSize: 14,
-		marginLeft: 10
+		marginBottom: 5
 	},
 	descriptions: {
 		flexDirection: "row",
@@ -108,7 +113,7 @@ var styles = StyleSheet.create({
 	info: {
 		fontSize: 12,
 		color: '#AAA',
-		margin:10
+		marginBottom : 5
 	}
 });
 
