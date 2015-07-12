@@ -37,26 +37,16 @@ var StoryPage = React.createClass({
 		this.setState(getState(this.props));
 	},
 	render: function(){
-		console.log("current state");
-		console.log(this.state);
 		var menu = <Menu navigator={this.props.navigator} />;
-		// return (
-		// 	<SideMenu menu={menu}>
-		// 		<StoryListView
-		// 			type={this.props.type}
-		// 			isLoading={this.state.isLoading}
-		// 			stories = {this.state.stories}
-		// 			navigator={this.props.navigator}
-		// 			loadMore={this.loadMore} />
-		// 	</SideMenu>
-		// );
-		// 
 		return (
-			<StoryListView 
+			<SideMenu menu={menu}>
+				<StoryListView 
 				isLoading={this.state.isLoading}
 				stories={this.state}
 				type={this.props.type} />
-		)
+			</SideMenu>
+		);
+		
 	},
 	loadMore: function(){
 		StoryActionCreators.loadMoreStories(props);
