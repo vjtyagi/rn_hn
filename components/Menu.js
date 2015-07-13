@@ -12,7 +12,7 @@ var Menu = React.createClass({
 	_onSelect: function(storyType){
 		// this.props.menuActions.close();
 		// this.props.navigator.push({
-		// 	name: storyType
+		// 	title: storyType
 		// });
 	},
 	render: function(){
