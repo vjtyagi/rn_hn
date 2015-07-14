@@ -41,9 +41,9 @@ var StoryPage = React.createClass({
 		return (
 			<SideMenu menu={menu}>
 				<StoryListView 
-				isLoading={this.state.isLoading}
-				stories={this.state}
-				type={this.props.type} />
+					isLoading={this.state.isLoading}
+					stories={this.state}
+					type={this.props.type} />
 			</SideMenu>
 		);
 		

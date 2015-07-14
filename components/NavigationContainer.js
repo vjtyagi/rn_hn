@@ -10,18 +10,10 @@ var {
 
 var navigationRouteMapper = {
 	LeftButton: function(route, navigator, index, navState){
-		console.log("route details");
-		console.log(route);
-		console.log(navigator);
-		console.log(index);
-		console.log(navState);
-
 		if( index === 0 ){
 			return null; // return the icon for toggling menu
 		}
-
 		return null;
-
 	},
 	RightButton: function(route, navigator, index, navState){
 		return null;
