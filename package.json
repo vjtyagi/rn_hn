@@ -15,8 +15,8 @@
     "object-assign": "^3.0.0",
     "q": "1.4.1",
     "react-native": "0.6.0",
-    "react-native-htmlview": "0.1.2",
-    "react-native-icons": "^0.2.0",
+    "react-native-htmlview": "0.2.0",
+    "react-native-side-menu": "0.9.3",
     "url": "0.10.3"
   }
 }

@@ -1,5 +1,5 @@
 const React = require("react-native");
-var NavigationContainer = require("../components/NavigationContainer");
+var NavigationContainer = require("./NavigationContainer");
 
 
 var App = React.createClass({
