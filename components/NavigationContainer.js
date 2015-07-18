@@ -1,6 +1,6 @@
-const React = require("react-native");
-const StoryTypes = require("../constants/StoryTypes");
-const StoryPage = require("../page/StoryPage");
+var React = require("react-native");
+var StoryTypes = require("../constants/StoryTypes");
+var StoryPage = require("../page/StoryPage");
 var {
 	Navigator,
 	StyleSheet,

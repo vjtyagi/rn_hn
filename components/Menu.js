@@ -1,6 +1,6 @@
-const React = require("react-native"),
-	StoryTypes = require("../constants/StoryTypes"),
-	window = require("Dimensions").get("window");
+var React = require("react-native"),
+	StoryTypes = require("../constants/StoryTypes");
+	
 var {
 	Text,
 	View,
@@ -8,6 +8,7 @@ var {
 	TouchableHighlight
 } = React;
 
+//var window = Dimensions.get("window");
 var Menu = React.createClass({
 	_onSelect: function(storyType){
 		// this.props.menuActions.close();
@@ -57,8 +58,8 @@ var styles = StyleSheet.create({
 	menuContainer: {
 		flex: 1,
 		marginTop: 60,
-		width: window.width,
-		height: window.height,
+		width: 120,
+		height: 120,
 		backgroundColor: "#7e3309"
 	},
 	menuOption: {

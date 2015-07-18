@@ -1,4 +1,4 @@
-const React = require("react-native"),
+var React = require("react-native"),
 	RefreshIndicator = require("./RefreshingIndicator"),
 	util = require("../utils/ApiUtils"),
 	moment = require("moment");
@@ -8,8 +8,7 @@ var {
 	View,
 	ListView,
 	StyleSheet,
-	TouchableHighlight,
-	ActivityIndicatorIOS
+	TouchableHighlight
 } = React;
 
 var baseDataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2 });

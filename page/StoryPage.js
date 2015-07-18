@@ -1,4 +1,4 @@
-const React = require("react-native"),
+var React = require("react-native"),
 	SideMenu = require('react-native-side-menu'),
 	StoryListView = require("../components/StoryListView"),
 	StoryStore = require("../stores/Story"),
